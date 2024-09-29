@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import {ThemeProvider} from "next-themes";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -25,10 +26,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen w-screen overflow-hidden`}>
+      <ThemeProvider attribute={"class"} defaultTheme={"system"} enableSystem={true} disableTransitionOnChange={false}>
+          {/*<div className={"h-screen w-screen p-6"}>*/}
+          {/*<div className={"h-full w-full items-center justify-center"}>*/}
+          {/*    <div className={"h-full bg-background shadow border"}>*/}
+          {/*        {children}*/}
+          {/*  </div>*/}
+          {/*</div>*/}
+          {/*</div>*/}
+          <div className={"h-full rounded-[0.5rem] border bg-background shadow"}>
+              {children}
+          </div>
+      </ThemeProvider>
       </body>
     </html>
   );
