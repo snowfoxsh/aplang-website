@@ -26,16 +26,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen w-screen overflow-hidden`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen w-screen`}>
       <ThemeProvider attribute={"class"} defaultTheme={"system"} enableSystem={true} disableTransitionOnChange={false}>
-          {/*<div className={"h-screen w-screen p-6"}>*/}
-          {/*<div className={"h-full w-full items-center justify-center"}>*/}
-          {/*    <div className={"h-full bg-background shadow border"}>*/}
-          {/*        {children}*/}
-          {/*  </div>*/}
-          {/*</div>*/}
-          {/*</div>*/}
-          <div className={"h-full rounded-[0.5rem] border bg-background shadow"}>
+          <div className={"flex flex-col overflow-hidden h-full rounded-[0.5rem] border bg-background shadow"}>
               {children}
           </div>
       </ThemeProvider>
