@@ -8,6 +8,7 @@ import {Tabs} from "@radix-ui/react-tabs";
 import LayoutTabs from "@/app/components/layout-tabs";
 import {ResizableHandle, ResizablePanel, ResizablePanelGroup} from "@/components/ui/resizable";
 import React, {useEffect, useState} from "react";
+import {Badge} from "@/components/ui/badge";
 
 type TabValue = "only-left" | "both" | "only-right";
 
@@ -71,7 +72,8 @@ export default function Playground() {
             <Separator />
             <Tabs className="flex flex-grow flex-row-reverse" defaultValue={"both"} value={tabValue} onValueChange={onTabChange}>
                 {/* Right side */}
-                <div className="flex flex-col w-64 flex-shrink-0 py-8 pr-8 space-y-2">
+                <div className="flex flex-col w-64 justify-between flex-shrink-0 py-8 pr-8 space-y-2">
+                    <div className={"flex flex-col space-y-2"}>
                     <HoverCard openDelay={500}>
                         <HoverCardTrigger asChild>
                             <span className={"text-md font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"}>
@@ -83,19 +85,20 @@ export default function Playground() {
                         </HoverCardContent>
                     </HoverCard>
                     <LayoutTabs/>
+                    </div>
+                    <Button>Run</Button>
                 </div>
                 {/* Left side */}
                 <div className="flex flex-grow min-w-0 p-8 items-center justify-center">
                     <ResizablePanelGroup direction="horizontal" className={"border flex-grow h-full rounded-md"}>
-                        <ResizablePanel defaultSize={70} hidden={leftHidden}>
+                        <ResizablePanel defaultSize={66} hidden={leftHidden}>
                             <div className={"flex h-full items-center justify-center"}>
-                                Sidebar
                             </div>
                         </ResizablePanel>
                         <ResizableHandle withHandle={true} disabled={handleHidden}/>
-                        <ResizablePanel className={"bg-muted"} defaultSize={30} minSize={15} maxSize={70} hidden={rightHidden}>
-                            <div className={"flex h-full items-center justify-center"}>
-                                Sidebar
+                        <ResizablePanel className={"bg-muted"} defaultSize={34} minSize={15} maxSize={70} hidden={rightHidden}>
+                            <div className={"relative flex h-full items-center justify-center"}>
+                                <Badge variant={"default"} className={"absolute bottom-3 right-3"}>0.0s</Badge>
                             </div>
                         </ResizablePanel>
                     </ResizablePanelGroup>
