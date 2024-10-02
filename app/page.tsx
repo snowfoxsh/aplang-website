@@ -9,9 +9,11 @@ import LayoutTabs from "@/app/components/layout-tabs";
 import {ResizableHandle, ResizablePanel, ResizablePanelGroup} from "@/components/ui/resizable";
 import React, {useEffect, useRef, useState} from "react";
 import {Badge} from "@/components/ui/badge";
-import {Textarea} from "@/components/ui/textarea";
 import RunButton from "@/app/components/run-button";
 import prettyMilliseconds from "pretty-ms";
+import ReactCodeMirror from "@uiw/react-codemirror";
+import {light, dark} from "codemirror-themes-for-shadcn";
+
 
 type TabValue = "only-left" | "both" | "only-right";
 
@@ -142,14 +144,19 @@ export default function Playground() {
                 {/* Left side */}
                 <div className="flex flex-grow min-w-0 p-8 items-center justify-center">
                     <ResizablePanelGroup direction="horizontal" className={"border flex-grow h-full rounded-md"}>
-                        <ResizablePanel defaultSize={66} hidden={leftHidden}>
-                            <Textarea
-                                value={sourceCode}
-                                onChange={(event) => { setSourceCode(event.target.value)}}
-                                className={"flex h-full items-center rounded-none justify-center resize-none border-none font-mono"}
-                            >
+                        <ResizablePanel
+                            defaultSize={66}
+                            hidden={leftHidden}
+                            className="flex flex-col h-full w-full"
+                        >
+                            {/*<Textarea*/}
+                            {/*    value={sourceCode}*/}
+                            {/*    onChange={(event) => { setSourceCode(event.target.value)}}*/}
+                            {/*    className={"flex h-full items-center rounded-none justify-center resize-none border-none font-mono"}*/}
+                            {/*>*/}
+                            {/*</Textarea>*/}
 
-                            </Textarea>
+                            <ReactCodeMirror className={"flex-1 h-full w-full"} theme={"dark"} height={"100%"} onChange={setSourceCode}></ReactCodeMirror>
                         </ResizablePanel>
                         <ResizableHandle withHandle={true} disabled={handleHidden}/>
                         <ResizablePanel className={"bg-muted"} defaultSize={34} minSize={15} maxSize={70} hidden={rightHidden}>
