@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "pack": "cd wasm-target && wasm-pack build --target web --out-dir ../public/wasm",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
