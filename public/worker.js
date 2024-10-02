@@ -34,7 +34,7 @@ self.onmessage = async (event) => {
       // Run the ApLang code
       aplang(code);
       const endTime = performance.now();
-      const executionTime = (endTime - startTime).toFixed(2);
+      const executionTime = (endTime - startTime);
 
       // Send execution time back to the main thread
       postMessage({ type: 'complete', time: executionTime });

@@ -10,7 +10,9 @@ import {ResizableHandle, ResizablePanel, ResizablePanelGroup} from "@/components
 import React, {useEffect, useRef, useState} from "react";
 import {Badge} from "@/components/ui/badge";
 import {Textarea} from "@/components/ui/textarea";
-import {Loader2} from "lucide-react";
+import RunButton from "@/app/components/run-button";
+import {workerResponse} from "@/app/worker_response";
+import prettyMilliseconds from "pretty-ms";
 
 type TabValue = "only-left" | "both" | "only-right";
 
@@ -23,8 +25,8 @@ export default function Playground() {
 
     const [sourceCode, setSourceCode] = useState<string>("");
 
-    const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
-
+    const [isRunning, setIsRunning] = useState<boolean>(false);
+    const [runtime, setRuntime] = useState<number>(0.0);
 
     const workerRef = useRef<Worker | null>(null);
 
@@ -33,7 +35,11 @@ export default function Playground() {
     }
 
     const handleRun = async () => {
+        document.getElementById("consoleText")!.innerText = ""; // clear the console
         workerRef.current?.postMessage({type: "run", code: sourceCode})
+        setIsRunning(true);
+        // await start
+        // await workerResponse(workerRef.current!);
     }
 
     // Move state updates into useEffect
@@ -57,15 +63,31 @@ export default function Playground() {
         }
     }, [tabValue]);
 
-
-
     useEffect(() => {
-        workerRef.current = new Worker("/worker.js", { type: "module"});
+        workerRef.current = new Worker("/worker.js", {type: "module"});
 
         workerRef.current.postMessage({type: "init"});
 
+        // await ready
+        // const _data: object = await workerResponse(workerRef.current!);
+        // console.log(_data);
+
         workerRef.current.onmessage = (event) => {
             console.log(event.data);
+
+            switch (event.data.type) {
+                case "log":
+                    // i would love to use hooks here but cant figure out how to
+                    const c = document.getElementById("consoleText")!;
+                    c.innerText = c.innerText + event.data.message;
+                    break;
+                case "complete":
+                    setIsRunning(false);
+                    setRuntime(event.data.time);
+                    break;
+                case "error":
+                    break;
+            }
         }
 
         return () => {
@@ -116,10 +138,7 @@ export default function Playground() {
                         </HoverCard>
                         <LayoutTabs/>
                     </div>
-                    <Button onClick={handleRun} disabled={buttonDisabled}>
-                        {/*<Loader2 className={"mr-2 h-4 w-4 animate-spin"}/>*/}
-                        Run
-                    </Button>
+                    <RunButton isLoading={isRunning} onClick={handleRun} />
                 </div>
                 {/* Left side */}
                 <div className="flex flex-grow min-w-0 p-8 items-center justify-center">
@@ -129,15 +148,17 @@ export default function Playground() {
                                 value={sourceCode}
                                 onChange={(event) => { setSourceCode(event.target.value)}}
                                 className={"flex h-full items-center rounded-none justify-center resize-none border-none"}
-                                placeholder={"DISPLAY(\"Hello world!\")"}
                             >
 
                             </Textarea>
                         </ResizablePanel>
                         <ResizableHandle withHandle={true} disabled={handleHidden}/>
                         <ResizablePanel className={"bg-muted"} defaultSize={34} minSize={15} maxSize={70} hidden={rightHidden}>
-                            <div className={"relative flex h-full items-center justify-center"}>
-                                <Badge variant={"default"} className={"absolute bottom-3 right-3"}>0.0s</Badge>
+                            <div className={"relative flex h-full p-2"}>
+                                <div id={"consoleText"}>
+
+                                </div>
+                                <Badge variant={"default"} className={"absolute bottom-3 right-3"}>{prettyMilliseconds(Math.round(runtime))}</Badge>
                             </div>
                         </ResizablePanel>
                     </ResizablePanelGroup>
