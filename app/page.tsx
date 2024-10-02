@@ -11,7 +11,6 @@ import React, {useEffect, useRef, useState} from "react";
 import {Badge} from "@/components/ui/badge";
 import {Textarea} from "@/components/ui/textarea";
 import RunButton from "@/app/components/run-button";
-import {workerResponse} from "@/app/worker_response";
 import prettyMilliseconds from "pretty-ms";
 
 type TabValue = "only-left" | "both" | "only-right";
@@ -147,7 +146,7 @@ export default function Playground() {
                             <Textarea
                                 value={sourceCode}
                                 onChange={(event) => { setSourceCode(event.target.value)}}
-                                className={"flex h-full items-center rounded-none justify-center resize-none border-none"}
+                                className={"flex h-full items-center rounded-none justify-center resize-none border-none font-mono"}
                             >
 
                             </Textarea>
@@ -155,7 +154,7 @@ export default function Playground() {
                         <ResizableHandle withHandle={true} disabled={handleHidden}/>
                         <ResizablePanel className={"bg-muted"} defaultSize={34} minSize={15} maxSize={70} hidden={rightHidden}>
                             <div className={"relative flex h-full p-2"}>
-                                <div id={"consoleText"}>
+                                <div id={"consoleText"} className={"font-mono"}>
 
                                 </div>
                                 <Badge variant={"default"} className={"absolute bottom-3 right-3"}>{prettyMilliseconds(Math.round(runtime))}</Badge>
