@@ -22,7 +22,6 @@ export default function Playground() {
 
     const onTabChange = (tab: string) => {
         setTabValue(tab as TabValue);
-
     }
 
     // Move state updates into useEffect
@@ -45,6 +44,17 @@ export default function Playground() {
                 break;
         }
     }, [tabValue]);
+
+    useEffect(() => {
+        const worker = new Worker("./worker.js", { type: "module"});
+
+        worker.postMessage({type: "init"});
+
+        worker.onmessage = (event) => {
+            console.log(event.data);
+        }
+    }, []);
+
 
     return (
         <div className={"flex flex-col min-h-screen w-full"}>
@@ -71,6 +81,7 @@ export default function Playground() {
             </div>
 
             <Separator />
+
             <Tabs className="flex flex-grow flex-row-reverse" defaultValue={"both"} value={tabValue} onValueChange={onTabChange}>
                 {/* Right side */}
                 <div className="flex flex-col w-64 justify-between flex-shrink-0 py-8 pr-8 space-y-2">

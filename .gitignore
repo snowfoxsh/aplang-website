@@ -35,4 +35,13 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# rust
+/wasm-target/target
+
+# idea
 .idea
+/wasm-target/.idea
+
+# vscode
+.vscode
+/wasm-target/.vscode

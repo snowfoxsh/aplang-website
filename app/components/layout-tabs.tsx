@@ -1,5 +1,5 @@
-import {Tabs, TabsList, TabsTrigger} from "@/components/ui/tabs";
-import {PanelLeftOpen, PanelRight, PanelRightClose, PanelRightOpen} from "lucide-react";
+import {TabsList, TabsTrigger} from "@/components/ui/tabs";
+import {PanelRight, PanelRightClose, PanelRightOpen} from "lucide-react";
 import React from "react"
 
 
