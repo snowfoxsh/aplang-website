@@ -12,8 +12,12 @@ import {Badge} from "@/components/ui/badge";
 import RunButton from "@/app/components/run-button";
 import prettyMilliseconds from "pretty-ms";
 import ReactCodeMirror from "@uiw/react-codemirror";
-import {light, dark} from "codemirror-themes-for-shadcn";
+// import {consoleDark, consoleDarkInit, consoleLight} from "@/app/themes";
+import {useTheme} from "next-themes";
+import {generateTheme} from "@/app/themes";
+// import {CreateThemeOptions} from "@uiw/codemirror-themes";
 
+// import {consoleLight, consoleDark} from "@uiw/codemirror-theme-console";
 
 type TabValue = "only-left" | "both" | "only-right";
 
@@ -30,6 +34,10 @@ export default function Playground() {
     const [runtime, setRuntime] = useState<number>(0.0);
 
     const workerRef = useRef<Worker | null>(null);
+
+    const { resolvedTheme } = useTheme(); // Get the resolved theme
+    const [themeLoaded, setThemeLoaded] = useState(false);
+
 
     const onTabChange = (tab: string) => {
         setTabValue(tab as TabValue);
@@ -97,8 +105,20 @@ export default function Playground() {
     }, []);
 
 
+    useEffect(() => {
+        if (resolvedTheme) {
+            // Theme has been resolved
+            setThemeLoaded(true);
+        }
+    }, [resolvedTheme]);
+
+    // // Wait for the theme to be loaded before rendering the component
+    if (!themeLoaded) {
+        return <div>Loading theme...</div>; // Optionally render a loading state
+    }
+
     return (
-        <div className={"flex flex-col min-h-screen w-full"}>
+        <div className={"flex flex-col min-h-screen w-full"} id={"playground"}>
             <div className="w-full box-border flex flex-row justify-between items-center px-8 h-16">
                 <HoverCard>
                     <HoverCardTrigger>
@@ -156,9 +176,9 @@ export default function Playground() {
                             {/*>*/}
                             {/*</Textarea>*/}
 
-                            <ReactCodeMirror className={"flex-1 h-full w-full"} theme={"dark"} height={"100%"} onChange={setSourceCode}></ReactCodeMirror>
+                            <ReactCodeMirror id={"editor"} className={"flex-1 h-full w-full"} theme={generateTheme()} height={"100%"} onChange={setSourceCode}></ReactCodeMirror>
                         </ResizablePanel>
-                        <ResizableHandle withHandle={true} disabled={handleHidden}/>
+                        <ResizableHandle withHandle={!handleHidden} disabled={handleHidden}/>
                         <ResizablePanel className={"bg-muted"} defaultSize={34} minSize={15} maxSize={70} hidden={rightHidden}>
                             <div className={"relative flex h-full p-2"}>
                                 <div id={"consoleText"} className={"font-mono"}>
