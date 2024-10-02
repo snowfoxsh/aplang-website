@@ -7,9 +7,10 @@ import {ColorModeToggle} from "@/app/components/color-mode-toggle";
 import {Tabs} from "@radix-ui/react-tabs";
 import LayoutTabs from "@/app/components/layout-tabs";
 import {ResizableHandle, ResizablePanel, ResizablePanelGroup} from "@/components/ui/resizable";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Badge} from "@/components/ui/badge";
 import {Textarea} from "@/components/ui/textarea";
+import {Loader2} from "lucide-react";
 
 type TabValue = "only-left" | "both" | "only-right";
 
@@ -20,8 +21,19 @@ export default function Playground() {
 
     const [tabValue, setTabValue] = useState<TabValue>("both")
 
+    const [sourceCode, setSourceCode] = useState<string>("");
+
+    const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
+
+
+    const workerRef = useRef<Worker | null>(null);
+
     const onTabChange = (tab: string) => {
         setTabValue(tab as TabValue);
+    }
+
+    const handleRun = async () => {
+        workerRef.current?.postMessage({type: "run", code: sourceCode})
     }
 
     // Move state updates into useEffect
@@ -45,13 +57,19 @@ export default function Playground() {
         }
     }, [tabValue]);
 
+
+
     useEffect(() => {
-        const worker = new Worker("./worker.js", { type: "module"});
+        workerRef.current = new Worker("/worker.js", { type: "module"});
 
-        worker.postMessage({type: "init"});
+        workerRef.current.postMessage({type: "init"});
 
-        worker.onmessage = (event) => {
+        workerRef.current.onmessage = (event) => {
             console.log(event.data);
+        }
+
+        return () => {
+            workerRef.current?.terminate();
         }
     }, []);
 
@@ -98,13 +116,18 @@ export default function Playground() {
                         </HoverCard>
                         <LayoutTabs/>
                     </div>
-                    <Button>Run</Button>
+                    <Button onClick={handleRun} disabled={buttonDisabled}>
+                        {/*<Loader2 className={"mr-2 h-4 w-4 animate-spin"}/>*/}
+                        Run
+                    </Button>
                 </div>
                 {/* Left side */}
                 <div className="flex flex-grow min-w-0 p-8 items-center justify-center">
                     <ResizablePanelGroup direction="horizontal" className={"border flex-grow h-full rounded-md"}>
                         <ResizablePanel defaultSize={66} hidden={leftHidden}>
                             <Textarea
+                                value={sourceCode}
+                                onChange={(event) => { setSourceCode(event.target.value)}}
                                 className={"flex h-full items-center rounded-none justify-center resize-none border-none"}
                                 placeholder={"DISPLAY(\"Hello world!\")"}
                             >

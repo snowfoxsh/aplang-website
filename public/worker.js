@@ -1,11 +1,10 @@
-// importScripts("./aplang.js")
-import init, {bind_io, aplang} from "./aplang.js";
+import init, {bind_io, aplang} from "./wasm/wasm_target.js";
 
 
 let wasmModule = null;
 
 // Initialize WASM
-async function initAplang() {
+async function initApLang() {
   wasmModule = await init();
   bind_io(
     (output) => postMessage({ type: 'log', message: output }),  // Send output back to main thread
@@ -17,7 +16,7 @@ self.onmessage = async (event) => {
   const {type, code} = event.data;
 
   if (type === 'init') {
-    await initAplang();
+    await initApLang();
     postMessage({ type: "ready"});
     return;
   }
