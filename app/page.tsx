@@ -120,9 +120,12 @@ export default function Playground() {
         }
     }, [resolvedTheme]);
 
-    const onEditorChange = useCallback((editorValue: string) => {
-        setSourceCode(editorValue)
-        localStorage.setItem("sourceCode", sourceCode);
+    const onEditorChange = useCallback((source: string) => {
+        setSourceCode(source)
+    }, []);
+
+    useEffect(() => {
+        localStorage.setItem("sourceCode", sourceCode)
     }, [sourceCode]);
 
     // // Wait for the theme to be loaded before rendering the component
@@ -193,19 +196,15 @@ export default function Playground() {
                     {/* Left side */}
                     <div className="flex flex-grow min-w-0 p-8 items-center justify-center">
                     <ResizablePanelGroup direction="horizontal" className={"border flex-grow h-full rounded-md"}>
-                        <ResizablePanel
-                            defaultSize={66}
-                            hidden={leftHidden}
-                            className="flex flex-col h-full w-full"
-                        >
-                            <ReactCodeMirror onChange={onEditorChange} value={sourceCode} id={"editor"} className={"flex-1 h-full w-full"} theme={generateTheme()} height={"100%"}></ReactCodeMirror>
+                        <ResizablePanel defaultSize={66} hidden={leftHidden} className="flex flex-col h-full w-full">
+                            <ReactCodeMirror onChange={onEditorChange} value={sourceCode} id={"editor"} className={"flex-1 h-full w-full"} theme={generateTheme()} height={"100%"} />
                         </ResizablePanel>
                         <ResizableHandle withHandle={!handleHidden} disabled={handleHidden}/>
                         <ResizablePanel className={"bg-muted"} defaultSize={34} minSize={15} maxSize={70} hidden={rightHidden}>
                             <div className={"relative flex h-full p-2"}>
-                                <div id={"consoleText"} className={"font-mono"}>
 
-                                </div>
+                                {/* console */}
+                                <div id={"consoleText"} className={"font-mono"}></div>
                                 <Badge variant={"default"} className={"absolute bottom-3 right-3"}>{prettyMilliseconds(Math.round(runtime))}</Badge>
                             </div>
                         </ResizablePanel>
