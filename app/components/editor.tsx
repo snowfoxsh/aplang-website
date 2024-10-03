@@ -1,4 +1,4 @@
-import {Dispatch, SetStateAction, useCallback, useEffect, useState} from "react";
+import {Dispatch, SetStateAction, useCallback, useEffect, useReducer, useState} from "react";
 import ReactCodeMirror from "@uiw/react-codemirror";
 import {useTheme} from "next-themes";
 import {generateTheme} from "@/app/themes";
@@ -7,15 +7,15 @@ import {Loader2} from "lucide-react";
 interface EditorProps {
     sourceCode: string;
     setSourceCode: Dispatch<SetStateAction<string>>;
-    // className: string;
-    // height: string;
 }
 
 
 export default function Editor(props: EditorProps) {
     const {sourceCode, setSourceCode} = props;
 
-    const {resolvedTheme} = useTheme();
+    const [, forceUpdate] = useReducer(x => x + 1, 0);
+
+    const {theme, resolvedTheme} = useTheme();
 
     const [mounted, setMounted] = useState<boolean>(false);
     const [themeLoaded, setThemeLoaded] = useState(false);
@@ -25,6 +25,7 @@ export default function Editor(props: EditorProps) {
         setSourceCode(source);
     }, [setSourceCode]);
 
+    // detect mount
     useEffect(() => {
         setMounted(true);
     }, []);
@@ -34,12 +35,19 @@ export default function Editor(props: EditorProps) {
         setSourceCode(localStorage.getItem("sourceCode") || "");
     }, [setSourceCode]);
 
+    // detect initial theme load
     useEffect(() => {
         if (resolvedTheme) {
             setThemeLoaded(true);
         }
     }, [resolvedTheme]);
 
+    // if the theme is changed update
+    useEffect(() => {
+        forceUpdate();
+    }, [theme]);
+
+    // wait for theme for mount and theme load
     if (!mounted || !themeLoaded) {
         return (
             <div className={"w-full h-full flex items-center justify-center"}>
