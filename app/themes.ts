@@ -1,6 +1,8 @@
 "use client"
 
 import { createTheme, CreateThemeOptions } from '@uiw/codemirror-themes';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
 import tinycolor from "tinycolor2";
 
 //
@@ -20,7 +22,7 @@ export function css(cssVarName: string): string {
     const [h, s, l] = hslValue.match(/\d+(\.\d+)?/g)?.map(Number) || [0, 0, 100];
 
     // Convert HSL to Hex using tinycolor2
-    let a =  tinycolor({ h, s, l }).toHexString();
+    const a =  tinycolor({ h, s, l }).toHexString();
     console.log(a);
     return a
 }
