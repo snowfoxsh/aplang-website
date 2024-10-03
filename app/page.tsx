@@ -7,17 +7,11 @@ import {ColorModeToggle} from "@/app/components/color-mode-toggle";
 import {Tabs} from "@radix-ui/react-tabs";
 import LayoutTabs from "@/app/components/layout-tabs";
 import {ResizableHandle, ResizablePanel, ResizablePanelGroup} from "@/components/ui/resizable";
-import React, {useCallback, useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Badge} from "@/components/ui/badge";
 import RunButton from "@/app/components/run-button";
 import prettyMilliseconds from "pretty-ms";
-import ReactCodeMirror from "@uiw/react-codemirror";
-// import {consoleDark, consoleDarkInit, consoleLight} from "@/app/themes";
-import {useTheme} from "next-themes";
-import {generateTheme} from "@/app/themes";
-// import {CreateThemeOptions} from "@uiw/codemirror-themes";
-
-// import {consoleLight, consoleDark} from "@uiw/codemirror-theme-console";
+import Editor from "@/app/components/editor";
 
 type TabValue = "only-left" | "both" | "only-right";
 
@@ -28,16 +22,12 @@ export default function Playground() {
 
     const [tabValue, setTabValue] = useState<TabValue>("both")
 
-    const [sourceCode, setSourceCode] = useState<string>(localStorage.getItem("sourceCode") || "");
+    const [sourceCode, setSourceCode] = useState<string>("");
 
     const [isRunning, setIsRunning] = useState<boolean>(false);
     const [runtime, setRuntime] = useState<number>(0.0);
 
     const workerRef = useRef<Worker | null>(null);
-
-    const { resolvedTheme } = useTheme(); // Get the resolved theme
-    const [themeLoaded, setThemeLoaded] = useState(false);
-
 
     const onTabChange = (tab: string) => {
         setTabValue(tab as TabValue);
@@ -47,13 +37,7 @@ export default function Playground() {
         document.getElementById("consoleText")!.innerText = ""; // clear the console
         workerRef.current?.postMessage({type: "run", code: sourceCode})
         setIsRunning(true);
-        // await start
-        // await workerResponse(workerRef.current!);
     }
-
-    // const handleSave = async () => {
-    //     localStorage.setItem("sourceCode", sourceCode);
-    // }
 
     // Move state updates into useEffect
     useEffect(() => {
@@ -81,10 +65,6 @@ export default function Playground() {
 
         workerRef.current.postMessage({type: "init"});
 
-        // await ready
-        // const _data: object = await workerResponse(workerRef.current!);
-        // console.log(_data);
-
         workerRef.current.onmessage = (event) => {
             console.log(event.data);
 
@@ -107,31 +87,6 @@ export default function Playground() {
             workerRef.current?.terminate();
         }
     }, []);
-
-    // useEffect(() => {
-    //     localStorage.setItem("sourceCode", sourceCode);
-    // }, [sourceCode])
-
-
-    useEffect(() => {
-        if (resolvedTheme) {
-            // Theme has been resolved
-            setThemeLoaded(true);
-        }
-    }, [resolvedTheme]);
-
-    const onEditorChange = useCallback((source: string) => {
-        setSourceCode(source)
-    }, []);
-
-    useEffect(() => {
-        localStorage.setItem("sourceCode", sourceCode)
-    }, [sourceCode]);
-
-    // // Wait for the theme to be loaded before rendering the component
-    if (!themeLoaded) {
-        return <div>Loading theme...</div>; // Optionally render a loading state
-    }
 
     return (
         <div className={"flex flex-col min-h-screen w-full"} id={"playground"}>
@@ -197,7 +152,8 @@ export default function Playground() {
                     <div className="flex flex-grow min-w-0 p-8 items-center justify-center">
                     <ResizablePanelGroup direction="horizontal" className={"border flex-grow h-full rounded-md"}>
                         <ResizablePanel defaultSize={66} hidden={leftHidden} className="flex flex-col h-full w-full">
-                            <ReactCodeMirror onChange={onEditorChange} value={sourceCode} id={"editor"} className={"flex-1 h-full w-full"} theme={generateTheme()} height={"100%"} />
+                            <Editor sourceCode={sourceCode} setSourceCode={setSourceCode} />
+                            {/*<ReactCodeMirror onChange={onEditorChange} value={sourceCode} id={"editor"} className={"flex-1 h-full w-full"} theme={generateTheme()} height={"100%"} />*/}
                         </ResizablePanel>
                         <ResizableHandle withHandle={!handleHidden} disabled={handleHidden}/>
                         <ResizablePanel className={"bg-muted"} defaultSize={34} minSize={15} maxSize={70} hidden={rightHidden}>
