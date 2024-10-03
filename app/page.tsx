@@ -7,7 +7,7 @@ import {ColorModeToggle} from "@/app/components/color-mode-toggle";
 import {Tabs} from "@radix-ui/react-tabs";
 import LayoutTabs from "@/app/components/layout-tabs";
 import {ResizableHandle, ResizablePanel, ResizablePanelGroup} from "@/components/ui/resizable";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import {Badge} from "@/components/ui/badge";
 import RunButton from "@/app/components/run-button";
 import prettyMilliseconds from "pretty-ms";
@@ -15,7 +15,6 @@ import ReactCodeMirror from "@uiw/react-codemirror";
 // import {consoleDark, consoleDarkInit, consoleLight} from "@/app/themes";
 import {useTheme} from "next-themes";
 import {generateTheme} from "@/app/themes";
-import {useErrorHandler} from "next/dist/client/components/react-dev-overlay/internal/helpers/use-error-handler";
 // import {CreateThemeOptions} from "@uiw/codemirror-themes";
 
 // import {consoleLight, consoleDark} from "@uiw/codemirror-theme-console";
@@ -29,7 +28,7 @@ export default function Playground() {
 
     const [tabValue, setTabValue] = useState<TabValue>("both")
 
-    const [sourceCode, setSourceCode] = useState<string>(localStorage.getItem("sourceCode") || "" );
+    const [sourceCode, setSourceCode] = useState<string>(localStorage.getItem("sourceCode") || "");
 
     const [isRunning, setIsRunning] = useState<boolean>(false);
     const [runtime, setRuntime] = useState<number>(0.0);
@@ -52,9 +51,9 @@ export default function Playground() {
         // await workerResponse(workerRef.current!);
     }
 
-    const handleSave = async () => {
-        localStorage.setItem("sourceCode", sourceCode);
-    }
+    // const handleSave = async () => {
+    //     localStorage.setItem("sourceCode", sourceCode);
+    // }
 
     // Move state updates into useEffect
     useEffect(() => {
@@ -109,9 +108,9 @@ export default function Playground() {
         }
     }, []);
 
-    useEffect(() => {
-        localStorage.setItem("sourceCode", sourceCode);
-    }, [sourceCode])
+    // useEffect(() => {
+    //     localStorage.setItem("sourceCode", sourceCode);
+    // }, [sourceCode])
 
 
     useEffect(() => {
@@ -120,6 +119,11 @@ export default function Playground() {
             setThemeLoaded(true);
         }
     }, [resolvedTheme]);
+
+    const onEditorChange = useCallback((editorValue: string) => {
+        setSourceCode(editorValue)
+        localStorage.setItem("sourceCode", sourceCode);
+    }, [sourceCode]);
 
     // // Wait for the theme to be loaded before rendering the component
     if (!themeLoaded) {
@@ -194,7 +198,7 @@ export default function Playground() {
                             hidden={leftHidden}
                             className="flex flex-col h-full w-full"
                         >
-                            <ReactCodeMirror id={"editor"} className={"flex-1 h-full w-full"} theme={generateTheme()} height={"100%"} onChange={setSourceCode}></ReactCodeMirror>
+                            <ReactCodeMirror onChange={onEditorChange} value={sourceCode} id={"editor"} className={"flex-1 h-full w-full"} theme={generateTheme()} height={"100%"}></ReactCodeMirror>
                         </ResizablePanel>
                         <ResizableHandle withHandle={!handleHidden} disabled={handleHidden}/>
                         <ResizablePanel className={"bg-muted"} defaultSize={34} minSize={15} maxSize={70} hidden={rightHidden}>
