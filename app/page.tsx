@@ -15,6 +15,7 @@ import ReactCodeMirror from "@uiw/react-codemirror";
 // import {consoleDark, consoleDarkInit, consoleLight} from "@/app/themes";
 import {useTheme} from "next-themes";
 import {generateTheme} from "@/app/themes";
+import {useErrorHandler} from "next/dist/client/components/react-dev-overlay/internal/helpers/use-error-handler";
 // import {CreateThemeOptions} from "@uiw/codemirror-themes";
 
 // import {consoleLight, consoleDark} from "@uiw/codemirror-theme-console";
@@ -28,7 +29,7 @@ export default function Playground() {
 
     const [tabValue, setTabValue] = useState<TabValue>("both")
 
-    const [sourceCode, setSourceCode] = useState<string>("");
+    const [sourceCode, setSourceCode] = useState<string>(localStorage.getItem("sourceCode") || "" );
 
     const [isRunning, setIsRunning] = useState<boolean>(false);
     const [runtime, setRuntime] = useState<number>(0.0);
@@ -49,6 +50,10 @@ export default function Playground() {
         setIsRunning(true);
         // await start
         // await workerResponse(workerRef.current!);
+    }
+
+    const handleSave = async () => {
+        localStorage.setItem("sourceCode", sourceCode);
     }
 
     // Move state updates into useEffect
@@ -104,6 +109,10 @@ export default function Playground() {
         }
     }, []);
 
+    useEffect(() => {
+        localStorage.setItem("sourceCode", sourceCode);
+    }, [sourceCode])
+
 
     useEffect(() => {
         if (resolvedTheme) {
@@ -146,36 +155,45 @@ export default function Playground() {
             <Tabs className="flex flex-grow flex-row-reverse" defaultValue={"both"} value={tabValue} onValueChange={onTabChange}>
                 {/* Right side */}
                 <div className="flex flex-col w-64 justify-between flex-shrink-0 py-8 pr-8 space-y-2">
-                    <div className={"flex flex-col space-y-2"}>
-                        <HoverCard openDelay={500}>
-                            <HoverCardTrigger asChild>
-                            <span className={"text-md font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"}>
+                    <div className={"flex flex-col space-y-4"}>
+                        {/*mode*/}
+                        <div className={"flex flex-col space-y-2"}>
+                            <HoverCard openDelay={500}>
+                                <HoverCardTrigger asChild>
+                            <span
+                                className={"text-md font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"}>
                                 Mode
                             </span>
-                            </HoverCardTrigger>
-                            <HoverCardContent className={"max-w-lg text-sm"}>
-                                Choose the interface that best suits your task
-                            </HoverCardContent>
-                        </HoverCard>
-                        <LayoutTabs/>
+                                </HoverCardTrigger>
+                                <HoverCardContent className={"max-w-lg text-sm"}>
+                                    Choose the interface that best suits your task
+                                </HoverCardContent>
+                            </HoverCard>
+                            <LayoutTabs/>
+                        </div>
+                        <Separator/>
+                        {/*clear*/}
+                        <div className={"flex flex-col space-y-2"}>
+                        <span
+                            className={"text-md font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"}>
+                            Clear
+                        </span>
+                            <div className={"flex flex-row justify-between space-x-2"}>
+                                <Button variant={"secondary"} className={"flex-grow"} onClick={() => {document.getElementById("consoleText")!.innerText =  ""}}>Console</Button>
+                                <Button variant={"destructive"}>Editor</Button>
+                            </div>
+                        </div>
+                        </div>
+                        <RunButton isLoading={isRunning} onClick={handleRun}/>
                     </div>
-                    <RunButton isLoading={isRunning} onClick={handleRun} />
-                </div>
-                {/* Left side */}
-                <div className="flex flex-grow min-w-0 p-8 items-center justify-center">
+                    {/* Left side */}
+                    <div className="flex flex-grow min-w-0 p-8 items-center justify-center">
                     <ResizablePanelGroup direction="horizontal" className={"border flex-grow h-full rounded-md"}>
                         <ResizablePanel
                             defaultSize={66}
                             hidden={leftHidden}
                             className="flex flex-col h-full w-full"
                         >
-                            {/*<Textarea*/}
-                            {/*    value={sourceCode}*/}
-                            {/*    onChange={(event) => { setSourceCode(event.target.value)}}*/}
-                            {/*    className={"flex h-full items-center rounded-none justify-center resize-none border-none font-mono"}*/}
-                            {/*>*/}
-                            {/*</Textarea>*/}
-
                             <ReactCodeMirror id={"editor"} className={"flex-1 h-full w-full"} theme={generateTheme()} height={"100%"} onChange={setSourceCode}></ReactCodeMirror>
                         </ResizablePanel>
                         <ResizableHandle withHandle={!handleHidden} disabled={handleHidden}/>
