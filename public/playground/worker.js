@@ -1,4 +1,4 @@
-import init, {bind_io, aplang} from "./wasm/wasm_target.js";
+import init, {bind_io, aplang} from "../wasm/wasm_target.js";
 
 
 let wasmModule = null;
