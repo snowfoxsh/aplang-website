@@ -30,17 +30,17 @@ export default function Editor(props: EditorProps) {
         setMounted(true);
     }, []);
 
-    // when the component is mounted set the source from storage
-    useEffect(() => {
-        setSourceCode(localStorage.getItem("sourceCode") || "");
-    }, [setSourceCode]);
-
     // detect initial theme load
     useEffect(() => {
         if (resolvedTheme) {
             setThemeLoaded(true);
         }
     }, [resolvedTheme]);
+
+    // when the component is mounted set the source from storage
+    useEffect(() => {
+        setSourceCode(localStorage.getItem("sourceCode") || "");
+    }, [setSourceCode]);
 
     // if the theme is changed update
     useEffect(() => {

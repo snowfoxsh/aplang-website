@@ -52,7 +52,6 @@ export const generateTheme = (options?: Partial<CreateThemeOptions>) => {
         gutterActiveForeground: css("--foreground"),
         lineHighlight: css("--accent"),
     };
-    console.dir(defaultSettingsConsoleDark);
 
     const { theme = 'dark', settings = {}, styles = [] } = options || {};
 

@@ -13,6 +13,8 @@ import RunButton from "@/app/components/run-button";
 import prettyMilliseconds from "pretty-ms";
 import Editor from "@/app/components/editor";
 import {toast} from "sonner";
+import { workerResponse} from "@/app/worker_response";
+import {timeout} from "@/app/utils";
 
 type TabValue = "only-left" | "both" | "only-right";
 
@@ -41,6 +43,25 @@ export default function Playground() {
     const handleRun = async () => {
         document.getElementById("consoleText")!.innerText = ""; // clear the console
         workerRef.current?.postMessage({type: "run", code: sourceCode})
+
+        try {
+            // wait for the start res
+            const res = await timeout(workerResponse, [workerRef.current!], 1000);
+
+            console.log("run started: ", res);
+
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            if (res.type !== "started") {
+                throw "not started???";
+            }
+        } catch(e) {
+            toastError("Could not start run job");
+
+            console.error(e);
+            return;
+        }
+
         setIsRunning(true);
     }
 
@@ -65,40 +86,58 @@ export default function Playground() {
         }
     }, [tabValue]);
 
+    const workerInitializedRef = useRef(false)
+    // const [workerAlive, setWorkerAlive] = useState<boolean>(false);
+
     useEffect(() => {
-        try {
-            workerRef.current = new Worker("/worker.js", {type: "module"});
-        } catch (e) {
-            console.error("worker creation:\n" +  e);
-            toastError("Worker could not be initialized")
+        if (workerInitializedRef.current) {
+            // worker is already init
             return
         }
+        workerInitializedRef.current = true;
 
-        workerRef.current.postMessage({type: "init"});
+        (async () => {
+            const timer = setTimeout(() => {
+                console.error("timeout: could not initialize worker")
+                toast.error("timeout: failed to initialize worker worker");
+            }, 3000);
 
-            workerRef.current.onmessage = (event) => {
-            console.log(event.data);
 
-            switch (event.data.type) {
-                case "log":
-                    // i would love to use hooks here but cant figure out how to
-                    const c = document.getElementById("consoleText")!;
-                    c.innerText = c.innerText + event.data.message;
-                    break;
-                case "complete":
-                    setIsRunning(false);
-                    setRuntime(event.data.time);
-                    break;
-                case "error":
-                    toastError("Internal error")
-                    break;
+            try {
+                workerRef.current = new Worker("/worker.js", {type: "module"});
+            } catch (e) {
+                console.error("worker creation:\n" + e);
+                toastError("Worker could not be initialized");
+                return;
             }
-        }
 
-        return () => {
-            workerRef.current?.terminate();
-        }
+            console.log("trying to init worker");
+            workerRef.current.postMessage({type: "init"});
+            const res = await workerResponse(workerRef.current);
+            clearTimeout(timer);
+            console.dir("worker successfully initiated: ", res);
+
+            workerRef.current.addEventListener("message", async (event) => {
+                console.log("event: ", event.data);
+
+                switch (event.data.type) {
+                    case "log":
+                        // Update console output
+                        const c = document.getElementById("consoleText")!;
+                        c.innerText = c.innerText + event.data.message;
+                        break;
+                    case "complete":
+                        setIsRunning(false);
+                        setRuntime(event.data.time);
+                        break;
+                    case "error":
+                        toastError("Internal error");
+                        break;
+                }
+            });
+        })();
     }, []);
+
 
     return (
         <div className={"flex flex-col min-h-screen w-full"} id={"playground"}>
@@ -120,13 +159,14 @@ export default function Playground() {
                 <div className="flex space-x-4">
                     <Button variant="outline">Import</Button>
                     <Button variant="outline">Export</Button>
-                    <ColorModeToggle />
+                    <ColorModeToggle/>
                 </div>
             </div>
 
-            <Separator />
+            <Separator/>
 
-            <Tabs className="flex flex-grow flex-row-reverse" defaultValue={"both"} value={tabValue} onValueChange={onTabChange}>
+            <Tabs className="flex flex-grow flex-row-reverse" defaultValue={"both"} value={tabValue}
+                  onValueChange={onTabChange}>
                 {/* Right side */}
                 <div className="flex flex-col w-64 justify-between flex-shrink-0 py-8 pr-8 space-y-2">
                     <div className={"flex flex-col space-y-4"}>
@@ -153,27 +193,31 @@ export default function Playground() {
                             Clear
                         </span>
                             <div className={"flex flex-row justify-between space-x-2"}>
-                                <Button variant={"secondary"} className={"flex-grow"} onClick={() => {document.getElementById("consoleText")!.innerText =  ""}}>Console</Button>
+                                <Button variant={"secondary"} className={"flex-grow"} onClick={() => {
+                                    document.getElementById("consoleText")!.innerText = ""
+                                }}>Console</Button>
                                 <Button variant={"destructive"}>Editor</Button>
                             </div>
                         </div>
-                        </div>
-                        <RunButton isLoading={isRunning} onClick={handleRun}/>
                     </div>
-                    {/* Left side */}
-                    <div className="flex flex-grow min-w-0 p-8 items-center justify-center">
+                    <RunButton isLoading={isRunning} onClick={handleRun}/>
+                </div>
+                {/* Left side */}
+                <div className="flex flex-grow min-w-0 p-8 items-center justify-center">
                     <ResizablePanelGroup direction="horizontal" className={"border flex-grow h-full rounded-md"}>
                         <ResizablePanel defaultSize={66} hidden={leftHidden} className="flex flex-col h-full w-full">
-                            <Editor sourceCode={sourceCode} setSourceCode={setSourceCode} />
+                            <Editor sourceCode={sourceCode} setSourceCode={setSourceCode}/>
                             {/*<ReactCodeMirror onChange={onEditorChange} value={sourceCode} id={"editor"} className={"flex-1 h-full w-full"} theme={generateTheme()} height={"100%"} />*/}
                         </ResizablePanel>
                         <ResizableHandle withHandle={!handleHidden} disabled={handleHidden}/>
-                        <ResizablePanel className={"bg-muted"} defaultSize={34} minSize={15} maxSize={70} hidden={rightHidden}>
+                        <ResizablePanel className={"bg-muted"} defaultSize={34} minSize={15} maxSize={70}
+                                        hidden={rightHidden}>
                             <div className={"relative flex h-full p-2"}>
 
                                 {/* console */}
                                 <div id={"consoleText"} className={"font-mono"}></div>
-                                <Badge variant={"default"} className={"absolute bottom-3 right-3"}>{prettyMilliseconds(Math.round(runtime))}</Badge>
+                                <Badge variant={"default"}
+                                       className={"absolute bottom-3 right-3"}>{prettyMilliseconds(Math.round(runtime))}</Badge>
                             </div>
                         </ResizablePanel>
                     </ResizablePanelGroup>
