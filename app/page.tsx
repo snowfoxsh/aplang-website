@@ -1,5 +1,4 @@
 "use client"
-
 import {Separator} from "@/components/ui/separator";
 import {HoverCard, HoverCardContent, HoverCardTrigger} from "@/components/ui/hover-card";
 import {Button} from "@/components/ui/button";
@@ -15,6 +14,25 @@ import Editor from "@/app/components/editor";
 import {toast} from "sonner";
 import { workerResponse} from "@/app/worker_response";
 import {timeout} from "@/app/utils";
+import {
+    NavigationMenu,
+    NavigationMenuList,
+    NavigationMenuItem,
+    NavigationMenuLink,
+    navigationMenuTriggerStyle
+} from "@/components/ui/navigation-menu";
+import Link from "next/link";
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+import {saveAs} from "file-saver";
+import {
+    AlertDialog, AlertDialogAction, AlertDialogCancel,
+    AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger
+} from "@/components/ui/alert-dialog";
 
 type TabValue = "only-left" | "both" | "only-right";
 
@@ -35,6 +53,7 @@ export default function Playground() {
     const [runtime, setRuntime] = useState<number>(0.0);
 
     const workerRef = useRef<Worker | null>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     const onTabChange = (tab: string) => {
         setTabValue(tab as TabValue);
@@ -63,6 +82,30 @@ export default function Playground() {
         }
 
         setIsRunning(true);
+    }
+
+    const handleImport = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const text = event.target?.result;
+                if (typeof text === 'string') {
+                    console.log(text)
+                    setSourceCode(text);
+                }
+            };
+            reader.readAsText(file);
+        }
+    };
+
+    const handleExport = () => {
+        const blob = new Blob([sourceCode], {type: "text/plain;charset=utf-8"});
+        saveAs(blob, "export.ap");
     }
 
     // Move state updates into useEffect
@@ -140,25 +183,47 @@ export default function Playground() {
 
 
     return (
-        <div className={"flex flex-col min-h-screen w-full"} id={"playground"}>
+        <div className="flex flex-col min-h-screen w-full" id="playground">
             <div className="w-full box-border flex flex-row justify-between items-center px-8 h-16">
-                <HoverCard>
-                    <HoverCardTrigger>
-                        <h2 className="text-lg font-bold">Playground</h2>
-                    </HoverCardTrigger>
-                    <HoverCardContent
-                        align="start"
-                        className="flex flex-col content-center items-center space-y-2 [&>*]:w-full"
+                <div className="flex gap-4">
+                    <Link
+                        href="/"
+                        className="flex justify-start items-center hover:opacity-85 transition-opacity duration-300 mr-1"
                     >
-                        <Button variant="secondary">Home</Button>
-                        <Button variant="secondary">Docs</Button>
-                        <Button variant="secondary">Repo</Button>
-                    </HoverCardContent>
-                </HoverCard>
-
-                <div className="flex space-x-4">
-                    <Button variant="outline">Import</Button>
-                    <Button variant="outline">Export</Button>
+                        <span className="font-bold text-lg mt-[-0.075rem]">Playground</span>
+                        <span className="sr-only">Playground</span>
+                    </Link>
+                    <NavigationMenu>
+                        <NavigationMenuList>
+                            <NavigationMenuItem>
+                                <Link href="/" passHref legacyBehavior>
+                                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                                        <span className="font-regular text-base">Book</span>
+                                        <span className="sr-only">Book</span>
+                                    </NavigationMenuLink>
+                                </Link>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem>
+                                <Link href="/" passHref legacyBehavior>
+                                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                                        <span className="font-regular text-base">Repo</span>
+                                        <span className="sr-only">Repo</span>
+                                    </NavigationMenuLink>
+                                </Link>
+                            </NavigationMenuItem>
+                        </NavigationMenuList>
+                    </NavigationMenu>
+                </div>
+                <div className="flex gap-4">
+                    <input
+                        type="file"
+                        accept=".ap"
+                        ref={fileInputRef}
+                        style={{display: 'none'}}
+                        onChange={handleFileChange}
+                    />
+                    <Button variant="secondary" onClick={handleImport}>Import</Button>
+                    <Button variant="outline" onClick={handleExport}>Export</Button>
                     <ColorModeToggle/>
                 </div>
             </div>
@@ -170,7 +235,7 @@ export default function Playground() {
                 {/* Right side */}
                 <div className="flex flex-col w-64 justify-between flex-shrink-0 py-8 pr-8 space-y-2">
                     <div className={"flex flex-col space-y-4"}>
-                        {/*mode*/}
+                    {/*mode*/}
                         <div className={"flex flex-col space-y-2"}>
                             <HoverCard openDelay={500}>
                                 <HoverCardTrigger asChild>
@@ -196,7 +261,25 @@ export default function Playground() {
                                 <Button variant={"secondary"} className={"flex-grow"} onClick={() => {
                                     document.getElementById("consoleText")!.innerText = ""
                                 }}>Console</Button>
-                                <Button variant={"destructive"}>Editor</Button>
+                                <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                        <Button variant="destructive">Editor</Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>
+                                                Clear the Editor?
+                                            </AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                This action cannot be undone!
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                            <AlertDialogAction onClick={() => setSourceCode("")}>Clear</AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
                             </div>
                         </div>
                     </div>
@@ -207,7 +290,6 @@ export default function Playground() {
                     <ResizablePanelGroup direction="horizontal" className={"border flex-grow h-full rounded-md"}>
                         <ResizablePanel defaultSize={66} hidden={leftHidden} className="flex flex-col h-full w-full">
                             <Editor sourceCode={sourceCode} setSourceCode={setSourceCode}/>
-                            {/*<ReactCodeMirror onChange={onEditorChange} value={sourceCode} id={"editor"} className={"flex-1 h-full w-full"} theme={generateTheme()} height={"100%"} />*/}
                         </ResizablePanel>
                         <ResizableHandle withHandle={!handleHidden} disabled={handleHidden}/>
                         <ResizablePanel className={"bg-muted"} defaultSize={34} minSize={15} maxSize={70}
