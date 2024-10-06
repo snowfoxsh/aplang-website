@@ -12,8 +12,13 @@ import {Badge} from "@/components/ui/badge";
 import RunButton from "@/app/components/run-button";
 import prettyMilliseconds from "pretty-ms";
 import Editor from "@/app/components/editor";
+import {toast} from "sonner";
 
 type TabValue = "only-left" | "both" | "only-right";
+
+function toastError(message: string) {
+    toast.error(message);
+}
 
 export default function Playground() {
     const [leftHidden, setLeftHidden] = useState(false);
@@ -61,11 +66,17 @@ export default function Playground() {
     }, [tabValue]);
 
     useEffect(() => {
-        workerRef.current = new Worker("/worker.js", {type: "module"});
+        try {
+            workerRef.current = new Worker("/worker.js", {type: "module"});
+        } catch (e) {
+            console.error("worker creation:\n" +  e);
+            toastError("Worker could not be initialized")
+            return
+        }
 
         workerRef.current.postMessage({type: "init"});
 
-        workerRef.current.onmessage = (event) => {
+            workerRef.current.onmessage = (event) => {
             console.log(event.data);
 
             switch (event.data.type) {
@@ -79,6 +90,7 @@ export default function Playground() {
                     setRuntime(event.data.time);
                     break;
                 case "error":
+                    toastError("Internal error")
                     break;
             }
         }

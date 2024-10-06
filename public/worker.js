@@ -41,6 +41,6 @@ self.onmessage = async (event) => {
     } catch (error) {
       postMessage({ type: 'error', message: error.message });
     }
-    return;
+
   }
 }

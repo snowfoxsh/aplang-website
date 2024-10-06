@@ -22,9 +22,7 @@ export function css(cssVarName: string): string {
     const [h, s, l] = hslValue.match(/\d+(\.\d+)?/g)?.map(Number) || [0, 0, 100];
 
     // Convert HSL to Hex using tinycolor2
-    const a =  tinycolor({ h, s, l }).toHexString();
-    console.log(a);
-    return a
+    return tinycolor({ h, s, l }).toHexString();
 }
 
 //
