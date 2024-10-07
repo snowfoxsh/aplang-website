@@ -58,7 +58,7 @@ export default function HomePage() {
                 <div className="container relative pb-10">
                     <section className="mx-auto flex max-w-[980px] flex-col items-center gap-2 py-8 md:py-12 md:pb-8 lg:py-21 lb:pb-6">
                         <h1 className="text-center text-3xl font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1]">
-                            Aplang
+                            ApLang
                         </h1>
                         <span className="max-w-[800px] text-center text-lg font-light text-foreground">
                             A programming language made to aid students who are taking AP Computer Science Principals
@@ -71,7 +71,7 @@ export default function HomePage() {
                                 </Link>
                             </Button>
                             <Button variant="outline" asChild>
-                                <Link href="/book" target="_blank" rel="noopener noreferrer">Learn Aplang</Link>
+                                <Link href="/book" target="_blank" rel="noopener noreferrer">Learn ApLang</Link>
                             </Button>
                         </div>
                     </section>
