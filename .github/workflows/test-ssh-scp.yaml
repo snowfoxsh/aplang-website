@@ -1,0 +1,35 @@
+name: Test SSH Connection
+
+on:
+  workflow_dispatch:  # Allows manual triggering of the workflow
+
+jobs:
+  test-ssh:
+    name: Test SSH Connection and SCP
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Test SSH Connection
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ secrets.DROPLET_IP }}
+          username: root  # Replace with your server username if not root
+          key: ${{ secrets.DEPLOY_KEY }}
+          port: 22  # Adjust if your SSH port is different
+          script: echo "SSH connection successful."
+          debug: true
+
+      - name: Create Test File
+        run: echo "Test file content" > testfile.txt
+
+      - name: Test SCP Connection
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DROPLET_IP }}
+          username: root  # Replace with your server username if not root
+          key: ${{ secrets.DEPLOY_KEY }}
+          port: 22  # Adjust if your SSH port is different
+          source: testfile.txt
+          target: ~/testfile.txt
+          tar: false
+          debug: true
