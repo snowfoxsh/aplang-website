@@ -6,7 +6,7 @@ import {ColorModeToggle} from "@/app/playground/components/color-mode-toggle";
 import {Tabs} from "@radix-ui/react-tabs";
 import LayoutTabs from "@/app/playground/components/layout-tabs";
 import {ResizableHandle, ResizablePanel, ResizablePanelGroup} from "@/components/ui/resizable";
-import React, {useEffect, useRef, useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import {Badge} from "@/components/ui/badge";
 import RunButton from "@/app/playground/components/run-button";
 import prettyMilliseconds from "pretty-ms";
@@ -59,7 +59,7 @@ export default function Playground() {
         setTabValue(tab as TabValue);
     }
 
-    const handleRun = async () => {
+    const handleRun = useCallback(async () => {
         document.getElementById("consoleText")!.innerText = ""; // clear the console
         workerRef.current?.postMessage({type: "run", code: sourceCode})
 
@@ -82,8 +82,45 @@ export default function Playground() {
         }
 
         setIsRunning(true);
-    }
+    }, [sourceCode]);
 
+    const handleKeyDown = useCallback(
+        async (event: KeyboardEvent) => {
+            if (event.altKey && event.key === 'r') {
+                event.preventDefault();
+                await handleRun();
+                console.log("Run with keybind");
+            }
+        },
+        [handleRun] // Dependencies
+    );
+
+    useEffect(() => {
+        window.addEventListener('keydown', handleKeyDown);
+
+        // Clean up the event listener on component unmount
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [handleKeyDown]); // Only re-run if handleKeyDown changes
+
+    // useEffect(() => {
+    //     const handleKeyDown = (event: KeyboardEvent) => {
+    //         // Check for specific keybinding, e.g., Ctrl + R
+    //         if (event.altKey && event.key === 'r') {
+    //             event.preventDefault();
+    //             handleRun().then(() => console.log("run with keybind"));
+    //         }
+    //     };
+    //
+    //     window.addEventListener('keydown', handleKeyDown);
+    //
+    //     // Clean up the event listener on component unmount
+    //     return () => {
+    //         window.removeEventListener('keydown', handleKeyDown);
+    //     };
+    // }, [handleRun]);
+    //
     const handleImport = () => {
         fileInputRef.current?.click();
     };
