@@ -33,6 +33,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
+import {PresetSelector} from "@/app/playground/components/preset-selector";
 
 type TabValue = "only-left" | "both" | "only-right";
 
@@ -249,6 +250,7 @@ export default function Playground() {
                         style={{display: 'none'}}
                         onChange={handleFileChange}
                     />
+                    <PresetSelector setSourceCode={setSourceCode}/>
                     <Button variant="secondary" onClick={handleImport}>Import</Button>
                     <Button variant="outline" onClick={handleExport}>Export</Button>
                     <ColorModeToggle/>
