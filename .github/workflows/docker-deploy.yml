@@ -22,7 +22,7 @@ jobs:
       - name: Save Docker image
         run: docker save aplang-website:latest >> ~/aplang-website.tar
       - name: Stage Docker image
-        run: mv ~/aplang-website.tar ~/docker-images/aplang-website.tar
+        run: mkdir ~/docker-images mv ~/aplang-website.tar ~/docker-images/aplang-website.tar
 
       # - name: Ensure permissions on aplang-website.tar
       #   run: chmod 644 docker-images/
