@@ -1,4 +1,4 @@
-name: Test SSH Connection
+name: Test SSH and SCP Connections
 
 on:
   workflow_dispatch:  # Allows manual triggering of the workflow
@@ -31,5 +31,32 @@ jobs:
           port: 22  # Adjust if your SSH port is different
           source: testfile.txt
           target: ~/testfile.txt
+          tar: false
+          debug: true
+
+  test-scp-tar:
+    name: Test SCP Tar File Transfer
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create a Test Tarball
+        run: |
+          mkdir test_directory
+          echo "This is a test file for tar" > test_directory/testfile1.txt
+          echo "Another test file" > test_directory/testfile2.txt
+          tar -cvf testfile.tar test_directory
+
+      - name: List Created Tarball
+        run: ls -alh
+
+      - name: Test SCP Tarball Transfer
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DROPLET_IP }}
+          username: root  # Replace with your server username if not root
+          key: ${{ secrets.DEPLOY_KEY }}
+          port: 22  # Adjust if your SSH port is different
+          source: testfile.tar
+          target: ~/testfile.tar
           tar: false
           debug: true
