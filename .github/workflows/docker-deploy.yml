@@ -5,54 +5,54 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:  # Allows manual triggering of the workflow
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           submodules: true
 
+      # Step 2: Build Docker image
       - name: Build Docker image
         run: docker build -t aplang-website:latest .
 
-      - name: Crate Stage Directory
-        run: mkdir ~/docker-images
+      # Step 3: Create Stage Directory
+      - name: Create Stage Directory
+        run: mkdir -p ~/docker-images
 
+      # Step 4: Save Docker image to tar
       - name: Save Docker image
         run: docker save --output ~/docker-images/aplang-website.tar aplang-website:latest
 
+      # Step 5: Peek into the files
       - name: Peek Files
         run: ls -la ~/docker-images
-      # - name: Stage Docker image
-      #   run: mkdir ~/docker-images && mv ~/aplang-website.tar ~/docker-images/aplang-website.tar
 
-      # - name: Ensure permissions on aplang-website.tar
-      #   run: chmod 644 docker-images/
+      # Step 6: Set up SSH key for SCP
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.DROPLET_IP }} >> ~/.ssh/known_hosts
 
-      - name: Copy to server
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.DROPLET_IP }}
-          username: root  # Replace with your server username if not root
-          key: ${{ secrets.DEPLOY_KEY }}
-          port: 22
-          source: ~/docker-images
-          target: ~/docker-images
-          debug: true
+      # Step 7: Copy Docker image to remote server using SCP
+      - name: SCP Docker Image to Server
+        run: |
+          scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ~/docker-images root@${{ secrets.DROPLET_IP }}:~/docker-images
 
-      - name: Load and Run image
-        uses: appleboy/ssh-action@v0.1.8
-        with:
-          host: ${{ secrets.DROPLET_IP }}
-          username: root  # Replace with your server username if not root
-          key: ${{ secrets.DEPLOY_KEY }}
-          port: 22
-          script: |
+      # Step 8: SSH into the server and load/run the Docker image
+      - name: Load and Run Docker Image on Server
+        run: |
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ secrets.DROPLET_IP }} << 'EOF'
             docker load -i ~/docker-images/aplang-website.tar
             docker stop aplang-website || true
             docker rm aplang-website || true
             docker run -d --name aplang-website -p 3000:3000 aplang-website:latest
+          EOF
