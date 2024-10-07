@@ -41,7 +41,11 @@ jobs:
           echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.DROPLET_IP }} >> ~/.ssh/known_hosts
-
+      - name: Remove old archive file
+        run: |
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ secrets.DROPLET_IP }} << 'EOF'
+            rm ~/docker-images/aplang-website.tar
+          EOF
       # Step 7: Copy Docker image to remote server using SCP
       - name: SCP Docker Image to Server
         run: |
