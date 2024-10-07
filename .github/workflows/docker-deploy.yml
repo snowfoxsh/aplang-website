@@ -45,6 +45,6 @@ jobs:
           docker load -i ~/aplang-website.tar
           docker stop aplang-website || true
           docker rm aplang-website || true
-          docker run -d --name aplang-website -p 80:3000 aplang-website:latest
+          docker run -d --name aplang-website -p 3000:3000 aplang-website:latest
         
     
