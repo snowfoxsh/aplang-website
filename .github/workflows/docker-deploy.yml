@@ -1,0 +1,48 @@
+name: Docker Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build-and-deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Build Docker image
+      run: docker build -t aplang-website:latest .
+
+    - name: Save Docker image
+      run: docker save aplang-website:latest -o aplang-website.tar
+
+    - name: Copy to server
+      uses: appleboy/scp-action@v0.1.8
+      with:
+        host: ${{ secrets.DROPLET_IP }}
+        username: root
+        key: ${{ secrets.DEPLOY_KEY }}
+        port: 22
+        source: aplang-website.tar
+        target: ~/aplang-website.tar
+
+    - name: Load and Run image
+      uses: appleboy/ssh-action@v.1.6
+      with:
+        host: ${{ secrets.DROPLET_IP }}
+        username: root
+        key: ${{ secrets.DEPLOY_KEY }}
+        port: 22
+        script: | 
+          docker load -i ~/aplang-website.tar
+          docker stop aplang-website || true
+          docker rm aplang-website || true
+          docker run -d --name aplang-website -p 80:3000 aplang-website:latest
+        
+    
