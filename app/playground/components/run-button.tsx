@@ -1,6 +1,14 @@
+"use client";
+
 import React from "react";
-import {Button} from "@/components/ui/button";
-import {Loader2} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
+import {
+    Tooltip,
+    TooltipContent, TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {Badge} from "@/components/ui/badge"; // Import Tooltip components from Shadcn UI
 
 interface RunButtonProps {
     isLoading: boolean;
@@ -11,40 +19,20 @@ export default function RunButton(props: RunButtonProps) {
     const { isLoading, onClick } = props;
 
     return (
-        <Button onClick={onClick} disabled={isLoading}>
-            {isLoading ? <Loader2 className={"mr-2 h-4 w-4 animate-spin"}/>: <></>}
-            {!isLoading ? "Run" : "Running..."}
-        </Button>
-    )
+        <TooltipProvider>
+        <Tooltip>
+            <TooltipTrigger asChild>
+                <Button onClick={onClick} disabled={isLoading}>
+                    {isLoading ? (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    ) : null}
+                    {!isLoading ? "Run" : "Running..."}
+                </Button>
+            </TooltipTrigger>
+            <TooltipContent className={"bg-muted text-foreground p-2 rounded-md"}>
+                <Badge>ALT</Badge> + <Badge>R</Badge>
+            </TooltipContent>
+        </Tooltip>
+        </TooltipProvider>
+    );
 }
-
-// // Use forwardRef to pass refs into the component
-// const RunButton = forwardRef<HTMLButtonElement, IRunButtonProps>(({ isLoading, setIsLoading }, ref) => {
-//     const handleClick = () => {
-//         // Update the isLoading ref value on click
-//         if (setIsLoading.current !== null) {
-//             setIsLoading.current = true;
-//         }
-//     };
-//
-//     return (
-//         <button ref={ref} onClick={handleClick}>
-//             {isLoading ? "Loading..." : "Run"}
-//         </button>
-//     );
-// });
-
-// export default function App() {
-//     const isLoadingRef = useRef<boolean>(false);
-//     const [isLoading, setIsLoadingState] = useState(isLoadingRef.current);
-//
-//     useEffect(() => {
-//         setIsLoadingState(isLoadingRef.current);
-//     }, [isLoadingRef.current]);
-//
-//     return (
-//         <div>
-//             <RunButton isLoading={isLoading} setIsLoading={isLoadingRef} ref={null} />
-//         </div>
-//     );
-// }
