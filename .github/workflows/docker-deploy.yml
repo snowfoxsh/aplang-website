@@ -20,11 +20,12 @@ jobs:
         run: docker build -t aplang-website:latest .
 
       - name: Save Docker image
-        run: docker save aplang-website:latest >> docker-image/aplang-website.tar
+        run: docker save aplang-website:latest >> ~/aplang-website.tar
+      - name: Stage Docker image
+        run: mv ~/aplang-website.tar ~/docker-images/aplang-website.tar
 
-
-      - name: Ensure permissions on aplang-website.tar
-        run: chmod 644 docker-build/aplang-website.tar
+      # - name: Ensure permissions on aplang-website.tar
+      #   run: chmod 644 docker-images/
 
       - name: Copy to server
         uses: appleboy/scp-action@v0.1.7
@@ -33,8 +34,8 @@ jobs:
           username: root  # Replace with your server username if not root
           key: ${{ secrets.DEPLOY_KEY }}
           port: 22
-          source: docker-image
-          target: ~/docker-image
+          source: ~/docker-images
+          target: ~/docker-images
           debug: true
 
       - name: Load and Run image
@@ -45,7 +46,7 @@ jobs:
           key: ${{ secrets.DEPLOY_KEY }}
           port: 22
           script: |
-            docker load -i ~/docker-image/aplang-website.tar
+            docker load -i ~/docker-images/aplang-website.tar
             docker stop aplang-website || true
             docker rm aplang-website || true
             docker run -d --name aplang-website -p 3000:3000 aplang-website:latest
