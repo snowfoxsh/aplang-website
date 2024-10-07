@@ -41,24 +41,35 @@ jobs:
           echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.DROPLET_IP }} >> ~/.ssh/known_hosts
-          
-      # Step: 6.5    
+
+      # Step: 6.5 Remove old archive file from remote
       - name: Remove old archive file
         run: |
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ secrets.DROPLET_IP }} << 'EOF'
             [ -f ~/docker-images/aplang-website.tar ] && rm -f ~/docker-images/aplang-website.tar || echo "File not found, skipping removal"
           EOF
-      # Step 7: Copy Docker image to remote server using SCP
+
+      # Step 7: Copy Docker image to remote server using SCP (Only the .tar file)
       - name: SCP Docker Image to Server
         run: |
-          scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r ~/docker-images root@${{ secrets.DROPLET_IP }}:~/docker-images
+          scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ~/docker-images/aplang-website.tar root@${{ secrets.DROPLET_IP }}:~/docker-images/aplang-website.tar
+
+      # Step 7.5: Verify if Docker Image Exists on Server
+      - name: Verify if Docker Image Exists on Server
+        run: |
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ secrets.DROPLET_IP }} "ls -la ~/docker-images/aplang-website.tar"
 
       # Step 8: SSH into the server and load/run the Docker image
       - name: Load and Run Docker Image on Server
         run: |
           ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no root@${{ secrets.DROPLET_IP }} << 'EOF'
-            docker load -i ~/docker-images/aplang-website.tar
-            docker stop aplang-website || true
-            docker rm aplang-website || true
-            docker run -d --name aplang-website -p 3000:3000 aplang-website:latest
+            if [ -f ~/docker-images/aplang-website.tar ]; then
+              docker load -i ~/docker-images/aplang-website.tar
+              docker stop aplang-website || true
+              docker rm aplang-website || true
+              docker run -d --name aplang-website -p 3000:3000 aplang-website:latest
+            else
+              echo "Error: Docker image tar file not found!"
+              exit 1
+            fi
           EOF
