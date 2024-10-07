@@ -23,7 +23,7 @@ export default function HomePage() {
                     <NavigationMenu>
                         <NavigationMenuList>
                             <NavigationMenuItem>
-                                <Link href="/" passHref legacyBehavior>
+                                <Link href="/book" passHref legacyBehavior>
                                     <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                                         <span className="font-regular text-base">Book</span>
                                         <span className="sr-only">Book</span>
