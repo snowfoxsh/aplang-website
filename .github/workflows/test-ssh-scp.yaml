@@ -31,7 +31,6 @@ jobs:
           port: 22  # Adjust if your SSH port is different
           source: testfile.txt
           target: ~/testfile.txt
-          tar: false
           debug: true
 
   test-scp-tar:
@@ -58,5 +57,4 @@ jobs:
           port: 22  # Adjust if your SSH port is different
           source: testfile.tar
           target: ~/testfile.tar
-          tar: false
-          debug: true
+          debug: true  # Removed 'tar: false' since you're already transferring a tarball
