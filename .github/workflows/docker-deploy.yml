@@ -23,7 +23,7 @@ jobs:
       run: docker save aplang-website:latest -o aplang-website.tar
 
     - name: Copy to server
-      uses: appleboy/scp-action@v0.1.8
+      uses: appleboy/scp-action@v0.1.7
       with:
         host: ${{ secrets.DROPLET_IP }}
         username: root
@@ -33,7 +33,7 @@ jobs:
         target: ~/aplang-website.tar
 
     - name: Load and Run image
-      uses: appleboy/ssh-action@v.1.6
+      uses: appleboy/ssh-action@v0.1.8
       with:
         host: ${{ secrets.DROPLET_IP }}
         username: root
