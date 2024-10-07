@@ -7,7 +7,7 @@ import {
     navigationMenuTriggerStyle
 } from "@/components/ui/navigation-menu";
 import {ColorModeToggle} from "@/app/playground/components/color-mode-toggle";
-import { ArrowRightIcon } from "lucide-react";
+import { ArrowRightIcon, GitHubLogoIcon } from "@radix-ui/react-icons";
 import { Button } from "@/components/ui/button";
 import React from "react";
 
@@ -38,18 +38,19 @@ export default function HomePage() {
                                     </NavigationMenuLink>
                                 </Link>
                             </NavigationMenuItem>
-                            <NavigationMenuItem>
-                                <Link href="https://github.com/snowfoxsh/aplang" passHref legacyBehavior>
-                                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                                        <span className="font-regular text-base">Repo</span>
-                                        <span className="sr-only">Repo</span>
-                                    </NavigationMenuLink>
-                                </Link>
-                            </NavigationMenuItem>
                         </NavigationMenuList>
                     </NavigationMenu>
                     <NavigationMenu className="ml-auto flex items-center gap-2">
+                        <NavigationMenuList>
+                            <NavigationMenuItem>
+                                <Link href="https://github.com/snowfoxsh/aplang" passHref legacyBehavior>
+                                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                                        <GitHubLogoIcon className="h-[1.2rem] w-[1.2rem]"/>
+                                    </NavigationMenuLink>
+                                </Link>
+                            </NavigationMenuItem>
                         <ColorModeToggle/>
+                        </NavigationMenuList>
                     </NavigationMenu>
                 </div>
             </header>
@@ -66,7 +67,7 @@ export default function HomePage() {
                             <Button variant="default" asChild>
                                 <Link href="/playground">
                                     Playground
-                                    <ArrowRightIcon className="ml-2 h-4 w-4" />
+                                    <ArrowRightIcon className="ml-2" />
                                 </Link>
                             </Button>
                             <Button variant="outline" asChild>
