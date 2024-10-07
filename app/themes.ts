@@ -5,12 +5,6 @@ import { createTheme, CreateThemeOptions } from '@uiw/codemirror-themes';
 // @ts-expect-error
 import tinycolor from "tinycolor2";
 
-//
-// function isDarkMode(): boolean {
-//     return window.matchMedia('(prefers-color-scheme: dark)').matches;
-// }
-//
-
 // Function to convert HSL CSS variable to Hex in TypeScript
 export function css(cssVarName: string): string {
     const rootStyles = window.getComputedStyle(document.body)
@@ -24,20 +18,6 @@ export function css(cssVarName: string): string {
     // Convert HSL to Hex using tinycolor2
     return tinycolor({ h, s, l }).toHexString();
 }
-
-//
-// export const defaultSettingsConsoleDark: CreateThemeOptions['settings'] = {
-//     background: css("--background"),
-//     foreground: css("--background"),
-//     caret: css("--background"),
-//     selection: css("--primary"),
-//     selectionMatch: css("--primary"),
-//     gutterBackground: css("--background"),
-//     gutterForeground: css("--foreground"),
-//     gutterActiveForeground: css("--background"),
-//     lineHighlight: css("--background"),
-// };
-//
 
 export const generateTheme = (options?: Partial<CreateThemeOptions>) => {
 
