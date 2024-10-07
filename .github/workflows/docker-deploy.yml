@@ -20,7 +20,7 @@ jobs:
         run: docker build -t aplang-website:latest .
 
       - name: Save Docker image
-        run: docker save -output ~/docker-images/aplang-website.tar aplang-website:latest
+        run: docker save --output ~/docker-images/aplang-website.tar aplang-website:latest
 
       - name: Peek Files
         run: ls -la ~/docker-images
