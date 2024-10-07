@@ -16,6 +16,16 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 // Define the shape of a preset
 interface Preset {
@@ -56,7 +66,7 @@ REPEAT UNTIL (i > 30) {
 }
 `,
     },
-    // Add more presets as needed
+    // todo: add more presets
 ];
 
 // Define the props for PresetSelector
@@ -67,13 +77,21 @@ interface PresetSelectorProps {
 
 export function PresetSelector({
                                    setSourceCode,
-                                   // currentSourceCode = "",
                                }: PresetSelectorProps) {
     const [open, setOpen] = React.useState(false);
     const [selectedPreset, setSelectedPreset] = React.useState<Preset | null>(null);
+    const [alertOpen, setAlertOpen] = React.useState(false);
+    const [pendingPreset, setPendingPreset] = React.useState<Preset | null>(null);
 
-    // Handler when a preset is selected
+    // Handler when a preset is selected from the list
     const handleSelect = (preset: Preset) => {
+        setPendingPreset(preset);
+        setAlertOpen(true);
+        setOpen(false);
+    };
+
+    // Function to apply the preset
+    const applyPreset = (preset: Preset) => {
         if (selectedPreset?.label === preset.label) {
             // If the same preset is selected again, deselect it
             setSelectedPreset(null);
@@ -83,49 +101,86 @@ export function PresetSelector({
             setSelectedPreset(preset);
             setSourceCode(preset.value);
         }
-        setOpen(false);
+    };
+
+    // Handler for confirming the overwrite
+    const handleConfirm = () => {
+        if (pendingPreset) {
+            applyPreset(pendingPreset);
+            setPendingPreset(null);
+        }
+        setAlertOpen(false);
+    };
+
+    // Handler for cancelling the overwrite
+    const handleCancel = () => {
+        setPendingPreset(null);
+        setAlertOpen(false);
     };
 
     return (
-        <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-                <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={open}
-                    className="w-[200px] justify-between"
-                >
-                    {selectedPreset ? selectedPreset.label : "Select preset..."}
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
-                <Command>
-                    <CommandInput placeholder="Search presets..." />
-                    <CommandList>
-                        <CommandEmpty>No presets found.</CommandEmpty>
-                        <CommandGroup>
-                            {presets.map((preset) => (
-                                <CommandItem
-                                    key={preset.label}
-                                    value={preset.label} // Changed to preset.label for searching by label
-                                    onSelect={() => handleSelect(preset)}
-                                >
-                                    <Check
-                                        className={cn(
-                                            "mr-2 h-4 w-4",
-                                            selectedPreset?.label === preset.label
-                                                ? "opacity-100"
-                                                : "opacity-0"
-                                        )}
-                                    />
-                                    {preset.label}
-                                </CommandItem>
-                            ))}
-                        </CommandGroup>
-                    </CommandList>
-                </Command>
-            </PopoverContent>
-        </Popover>
+        <>
+            {/* Popover for Preset Selection */}
+            <Popover open={open} onOpenChange={setOpen}>
+                <PopoverTrigger asChild>
+                    <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={open}
+                        className="w-[200px] justify-between"
+                    >
+                        {selectedPreset ? selectedPreset.label : "Select preset..."}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-0">
+                    <Command>
+                        <CommandInput placeholder="Search presets..." />
+                        <CommandList>
+                            <CommandEmpty>No presets found.</CommandEmpty>
+                            <CommandGroup>
+                                {presets.map((preset) => (
+                                    <CommandItem
+                                        key={preset.label}
+                                        value={preset.label} // Changed to preset.label for searching by label
+                                        onSelect={() => handleSelect(preset)}
+                                    >
+                                        <Check
+                                            className={cn(
+                                                "mr-2 h-4 w-4",
+                                                selectedPreset?.label === preset.label
+                                                    ? "opacity-100"
+                                                    : "opacity-0"
+                                            )}
+                                        />
+                                        {preset.label}
+                                    </CommandItem>
+                                ))}
+                            </CommandGroup>
+                        </CommandList>
+                    </Command>
+                </PopoverContent>
+            </Popover>
+
+            {/* Alert Dialog for Confirmation */}
+            <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Confirm Overwrite</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Selecting this preset will overwrite your current editor code. Are you sure you want to proceed?
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel onClick={handleCancel}>
+                            Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction onClick={handleConfirm}>
+                            Confirm
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        </>
     );
 }
