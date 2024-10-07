@@ -250,7 +250,7 @@ export default function Playground() {
                         style={{display: 'none'}}
                         onChange={handleFileChange}
                     />
-                    <PresetSelector setSourceCode={setSourceCode}/>
+                    <PresetSelector setSourceCode={setSourceCode} />
                     <Button variant="secondary" onClick={handleImport}>Import</Button>
                     <Button variant="outline" onClick={handleExport}>Export</Button>
                     <ColorModeToggle/>

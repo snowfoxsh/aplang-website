@@ -26,35 +26,55 @@ interface Preset {
 // Presets array
 const presets: Preset[] = [
     {
-        label: "fib.ap",
-        value: `DISPLAY("fib.ap")`,
+        label: "Hello World",
+        value: `DISPLAY("Hello World!")
+`,
     },
     {
-        label: "two.ap",
-        value: `DISPLAY("two.ap")`,
+        label: "Fibonacci Sequence",
+        value: `PROCEDURE fib(n) {
+  IF (n == 1) {
+    RETURN 1
+  } ELSE IF (n == 2) {
+    RETURN 1
+  } ELSE {
+    RETURN fib(n-1) + fib(n-2)
+  }
+}
+
+i <- 1
+REPEAT UNTIL (i > 30) {
+  DISPLAY(fib(i))
+  i <- i + 1
+}
+`,
     },
+    {
+        label: "Yap",
+        value: `REPEAT 10 TIMES {
+  DISPLAY("yap")
+}
+`,
+    },
+    // Add more presets as needed
 ];
 
 // Define the props for PresetSelector
 interface PresetSelectorProps {
     setSourceCode: (code: string) => void; // Setter function to update source code
-    currentSourceCode?: string; // (Optional) Current source code to display selected preset
+    // currentSourceCode?: string; // (Optional) Current source code to display selected preset
 }
 
 export function PresetSelector({
                                    setSourceCode,
-                                   currentSourceCode = "",
+                                   // currentSourceCode = "",
                                }: PresetSelectorProps) {
     const [open, setOpen] = React.useState(false);
-    const [selectedPreset, setSelectedPreset] = React.useState<Preset | null>(
-        () =>
-            presets.find((preset) => preset.value === currentSourceCode) ||
-            null
-    );
+    const [selectedPreset, setSelectedPreset] = React.useState<Preset | null>(null);
 
     // Handler when a preset is selected
     const handleSelect = (preset: Preset) => {
-        if (selectedPreset?.value === preset.value) {
+        if (selectedPreset?.label === preset.label) {
             // If the same preset is selected again, deselect it
             setSelectedPreset(null);
             setSourceCode(""); // Clear the source code
@@ -87,14 +107,14 @@ export function PresetSelector({
                         <CommandGroup>
                             {presets.map((preset) => (
                                 <CommandItem
-                                    key={preset.value}
-                                    value={preset.value}
+                                    key={preset.label}
+                                    value={preset.label} // Changed to preset.label for searching by label
                                     onSelect={() => handleSelect(preset)}
                                 >
                                     <Check
                                         className={cn(
                                             "mr-2 h-4 w-4",
-                                            selectedPreset?.value === preset.value
+                                            selectedPreset?.label === preset.label
                                                 ? "opacity-100"
                                                 : "opacity-0"
                                         )}
