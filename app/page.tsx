@@ -71,7 +71,7 @@ export default function HomePage() {
                                 </Link>
                             </Button>
                             <Button variant="outline" asChild>
-                                <Link href="/" target="_blank" rel="noopener noreferrer">Learn Aplang</Link>
+                                <Link href="/book" target="_blank" rel="noopener noreferrer">Learn Aplang</Link>
                             </Button>
                         </div>
                     </section>
