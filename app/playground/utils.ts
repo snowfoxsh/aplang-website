@@ -189,7 +189,7 @@ export function workerResponse<T>(worker: Worker): Promise<T> {
 //     return Promise.race([fnPromise, timeoutPromise]);
 // }
 
-export function timeout<T, Args extends any[]>(
+export function timeout<T, Args extends unknown[]>(
     fn: (...args: Args) => Promise<T>,
     args: Args,
     timeoutDuration: number
