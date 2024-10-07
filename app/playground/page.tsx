@@ -104,23 +104,6 @@ export default function Playground() {
         };
     }, [handleKeyDown]); // Only re-run if handleKeyDown changes
 
-    // useEffect(() => {
-    //     const handleKeyDown = (event: KeyboardEvent) => {
-    //         // Check for specific keybinding, e.g., Ctrl + R
-    //         if (event.altKey && event.key === 'r') {
-    //             event.preventDefault();
-    //             handleRun().then(() => console.log("run with keybind"));
-    //         }
-    //     };
-    //
-    //     window.addEventListener('keydown', handleKeyDown);
-    //
-    //     // Clean up the event listener on component unmount
-    //     return () => {
-    //         window.removeEventListener('keydown', handleKeyDown);
-    //     };
-    // }, [handleRun]);
-    //
     const handleImport = () => {
         fileInputRef.current?.click();
     };
@@ -167,7 +150,6 @@ export default function Playground() {
     }, [tabValue]);
 
     const workerInitializedRef = useRef(false)
-    // const [workerAlive, setWorkerAlive] = useState<boolean>(false);
 
     useEffect(() => {
         if (workerInitializedRef.current) {

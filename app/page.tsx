@@ -17,8 +17,8 @@ export default function HomePage() {
             <header className="z-[50] sticky top-0 w-full bg-background/95 border-b backdrop-blur-sm dark:bg-black/[0.6] border-border/40">
                 <div className="container h-14 flex items-center">
                     <Link href="/" className="flex justify-start items-center hover:opacity-85 transition-opacity duration-300 mr-4">
-                        <span className="font-bold text-lg mt-[-0.075rem]">Aplang</span>
-                        <span className="sr-only">Aplang</span>
+                        <span className="font-bold text-lg mt-[-0.075rem]">ApLang</span>
+                        <span className="sr-only">ApLang</span>
                     </Link>
                     <NavigationMenu>
                         <NavigationMenuList>
