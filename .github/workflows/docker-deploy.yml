@@ -19,6 +19,9 @@ jobs:
       - name: Build Docker image
         run: docker build -t aplang-website:latest .
 
+      - name: Crate Stage Directory
+        run: mkdir ~/docker-images
+
       - name: Save Docker image
         run: docker save --output ~/docker-images/aplang-website.tar aplang-website:latest
 
