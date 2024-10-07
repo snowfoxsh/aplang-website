@@ -88,7 +88,9 @@ IF (count > 0) {
     {
         label: "Insertion Sort",
         value:
-`PROCEDURE insertionSort(list) {
+`
+// DONT SUBMIT THIS FUNCTION AS HOMEWORK, your teacher will know :)
+PROCEDURE insertionSort(list) {
     // start from the second element (index 2) since the first element is trivially sorted
     i <- 2
     REPEAT UNTIL (i > LENGTH(list)) {
