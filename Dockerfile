@@ -17,8 +17,17 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Install Rust and Cargo
-RUN apk add --no-cache rust cargo
+# Install dependencies needed for rustup and building
+RUN apk add --no-cache curl build-base
+
+# Set environment variables for rustup and cargo
+ENV RUSTUP_HOME=/usr/local/rustup \
+    CARGO_HOME=/usr/local/cargo \
+    PATH=/usr/local/cargo/bin:$PATH
+
+# Install rustup and the required target
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y \
+    && rustup target add wasm32-unknown-unknown
 
 # Install wasm-pack (precompiled binary compatible with Alpine Linux)
 RUN wget https://github.com/rustwasm/wasm-pack/releases/download/v0.12.1/wasm-pack-v0.12.1-x86_64-unknown-linux-musl.tar.gz \
