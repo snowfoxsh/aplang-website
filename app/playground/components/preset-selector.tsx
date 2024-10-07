@@ -64,8 +64,57 @@ REPEAT UNTIL (i > 30) {
         value: `REPEAT 10 TIMES {
   DISPLAY("yap")
 }
-`,
+`},
+    {
+        label: "Average",
+        value:
+`numbers <- [10, 20, 30, 40, 50]
+sum <- 0
+count <- LENGTH(numbers)
+
+FOR EACH number IN numbers {
+  sum <- sum + number
+}
+
+IF (count > 0) {
+  average <- sum / count
+  DISPLAY("values: " + numbers)
+  DISPLAY("average: " + average)
+} ELSE {
+  DISPLAY("no numbers to calculate average")
+}
+`
     },
+    {
+        label: "Insertion Sort",
+        value:
+`PROCEDURE insertionSort(list) {
+    // start from the second element (index 2) since the first element is trivially sorted
+    i <- 2
+    REPEAT UNTIL (i > LENGTH(list)) {
+        key <- list[i]
+        j <- i - 1
+        
+        // move elements of list[1..i-1], that are greater than key, to one position ahead
+        REPEAT UNTIL (j < 1 OR list[j] <= key) {
+            list[j + 1] <- list[j]
+            j <- j - 1
+        }
+        
+        // insert the key at the correct position
+        list[j + 1] <- key
+        i <- i + 1
+    }
+    RETURN list
+}
+
+numbers <- [12, 11, 13, 5, 6]
+DISPLAY("original list: " + numbers)
+
+sortedNumbers <- insertionSort(numbers)
+DISPLAY("sorted list: " + sortedNumbers)
+`
+    }
     // todo: add more presets
 ];
 
