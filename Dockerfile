@@ -17,30 +17,28 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Install dependencies needed for rustup and building
-RUN apk add --no-cache curl build-base
+# install wasm-pack
+RUN apk add --no-cache wasm-pack
 
-# Set environment variables for rustup and cargo
-ENV RUSTUP_HOME=/usr/local/rustup \
-    CARGO_HOME=/usr/local/cargo \
-    PATH=/usr/local/cargo/bin:$PATH
+# Install mdbook (markdown book)
+RUN apk add --no-cache mdbook
 
-# Install rustup and the required target
-RUN curl https://sh.rustup.rs -sSf | sh -s -- -y \
-    && rustup target add wasm32-unknown-unknown
-
-# Install wasm-pack (precompiled binary compatible with Alpine Linux)
-RUN wget https://github.com/rustwasm/wasm-pack/releases/download/v0.12.1/wasm-pack-v0.12.1-x86_64-unknown-linux-musl.tar.gz \
-    && tar -xzf wasm-pack-v0.12.1-x86_64-unknown-linux-musl.tar.gz \
-    && mv wasm-pack-v0.12.1-x86_64-unknown-linux-musl/wasm-pack /usr/local/bin/ \
-    && rm -rf wasm-pack-v0.12.1-x86_64-unknown-linux-musl \
-    && rm wasm-pack-v0.12.1-x86_64-unknown-linux-musl.tar.gz
 
 # Disable Next.js telemetry during the build
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Run the pack script before building the application using npm
-RUN npm run pack && npm run build
+# RUN npm run pack && npm run build-mdbook && npm run build
+
+# Build aplang for wasm
+RUN npm run pack
+
+# build the docs
+RUN npm run build-mdbook
+
+# build website with next
+RUN npm run build
+
 
 # Production image, copy all the files, and run Next.js
 FROM base AS runner
