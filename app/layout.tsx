@@ -19,6 +19,9 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "ApLang",
   description: "The ApLang Website",
+  icons: {
+    icon: "/favicon.svg",  // Specify the favicon path here
+  },
 };
 
 export default function RootLayout({
@@ -27,13 +30,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+      <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Toaster position={"bottom-left"} duration={5000}/>
-        <ThemeProvider attribute={"class"} defaultTheme={"system"} enableSystem={true} disableTransitionOnChange={true}>
-          {children}
-        </ThemeProvider>
+      <Toaster position={"bottom-left"} duration={5000}/>
+      <ThemeProvider attribute={"class"} defaultTheme={"system"} enableSystem={true} disableTransitionOnChange={true}>
+        {children}
+      </ThemeProvider>
       </body>
-    </html>
+      </html>
   );
 }
