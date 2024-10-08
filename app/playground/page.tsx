@@ -317,7 +317,7 @@ export default function Playground() {
                 {/* Left side */}
                 <div className="flex flex-grow min-w-0 p-8 items-center justify-center">
                     <ResizablePanelGroup direction="horizontal" className={"border flex-grow h-full rounded-md"}>
-                        <ResizablePanel defaultSize={66} hidden={leftHidden} className="flex flex-col h-full w-full">
+                        <ResizablePanel defaultSize={66} hidden={leftHidden}>
                             <Editor sourceCode={sourceCode} setSourceCode={setSourceCode}/>
                         </ResizablePanel>
                         <ResizableHandle withHandle={!handleHidden} disabled={handleHidden}/>
