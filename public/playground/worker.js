@@ -1,14 +1,39 @@
 import init, {bind_io, aplang} from "../wasm/wasm_target.js";
 
 
+// copy fom worker res because cant import it for some reason
+export function workerRespons(worker) {
+  return new Promise<T>((resolve, reject) => {
+    const handleMessage = (event) => {
+      resolve(event.data);
+    };
+
+    const handleError = (error) => {
+      reject(error);
+    };
+
+    // Use the `once: true` option to ensure the listeners are automatically removed after they are triggered.
+    worker.addEventListener('message', handleMessage, { once: true });
+    worker.addEventListener('error', handleError, { once: true });
+  });
+}
+
 let wasmModule = null;
 
 // Initialize WASM
 async function initApLang() {
   wasmModule = await init();
+
+  let input = (prompt) => {
+    postMessage({ type: "input", prompt: prompt});
+    // let response = await workerResponse(self);
+    postMessage({ type: "response", response: "res" });
+  };
+
   bind_io(
     (output) => postMessage({ type: 'log', message: output }),  // Send output back to main thread
-    (error) => postMessage({ type: 'error', message: error })   // Send errors back to main thread
+    // (error) => postMessage({ type: 'error', message: error })   // Send errors back to main thread
+    input
   );
 }
 

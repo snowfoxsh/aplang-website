@@ -53,9 +53,7 @@ dependencies = [
 
 [[package]]
 name = "aplang"
-version = "0.1.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e4f42be3f1f10e6aa28c71fab93a6b4fa7a2755e250c9084f500b193d3f687ee"
+version = "0.1.6"
 dependencies = [
  "clap",
  "getrandom",
