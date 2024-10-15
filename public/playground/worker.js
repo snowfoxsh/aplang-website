@@ -24,14 +24,18 @@ let wasmModule = null;
 async function initApLang() {
   wasmModule = await init();
 
-  let input = (prompt) => {
-    postMessage({ type: "input", prompt: prompt});
-    // let response = await workerResponse(self);
-    postMessage({ type: "response", response: "res" });
+  // let input = (prompt) => {
+  //   postMessage({ type: "input", prompt: prompt});
+  //   let response = await workerResponse(self);
+    // postMessage({ type: "response", response: "res" });
+  // };
+
+  let input = (pass) => {
+    return pass
   };
 
   bind_io(
-    (output) => postMessage({ type: 'log', message: output }),  // Send output back to main thread
+    (output, error) => postMessage({ type: 'log', message: output , error: error }),  // Send output back to main thread
     // (error) => postMessage({ type: 'error', message: error })   // Send errors back to main thread
     input
   );
