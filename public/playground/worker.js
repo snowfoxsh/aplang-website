@@ -64,11 +64,11 @@ async function initApLang() {
     const unbackedStringBytes = new Uint8Array(unbackedBuffer);
 
     // copy the bytes from the SharedArrayBuffer
-    unbackedStringBytes.set(new Uint8Array(unbackedStringBytes, 4, length));
+    unbackedStringBytes.set(new Uint8Array(sharedBuffer, 4, length));
     console.log()
 
     let resultString = new TextDecoder().decode(unbackedStringBytes);
-    console.log(resultString);
+    console.log("result string", resultString);
     return resultString;
 
     // start after then length
