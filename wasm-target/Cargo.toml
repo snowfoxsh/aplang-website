@@ -7,8 +7,8 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-#aplang = { git= "https://github.com/snowfoxsh/aplang", default-features = false, features = ["wasm"] }
-aplang = { path="/code/rust/aplang", default-features = false, features = ["wasm"] }
+aplang = { git= "https://github.com/snowfoxsh/aplang", default-features = false, features = ["wasm"] }
+#aplang = { path="/code/rust/aplang", default-features = false, features = ["wasm"] }
 # wasm
 wasm-bindgen = "0.2.93"
 web-sys = "0.3.70"
