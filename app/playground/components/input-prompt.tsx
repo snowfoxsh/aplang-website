@@ -11,7 +11,7 @@ export interface DialogHandle {
 }
 
 // Dialog Component using forwardRef
-const InputDialog = forwardRef<DialogHandle, {}>((_, ref) => {
+const InputDialog = forwardRef<DialogHandle, object>((_, ref) => {
     const [isOpen, setIsOpen] = useState(false);
     const [inputValue, setInputValue] = useState("");
     const [resolvePromise, setResolvePromise] = useState<((value: string) => void) | null>(null);

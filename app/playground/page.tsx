@@ -35,8 +35,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import {PresetSelector} from "@/app/playground/components/preset-selector";
 import {number} from "prop-types";
-import InputPrompt from "@/app/playground/components/input-prompt";
-import InputDialog from "@/app/playground/components/input-prompt";
+import InputDialog, {DialogHandle} from "@/app/playground/components/input-prompt";
 
 type TabValue = "only-left" | "both" | "only-right";
 
