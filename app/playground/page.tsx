@@ -34,6 +34,9 @@ import {
     AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
 import {PresetSelector} from "@/app/playground/components/preset-selector";
+import {number} from "prop-types";
+import InputPrompt from "@/app/playground/components/input-prompt";
+import InputDialog from "@/app/playground/components/input-prompt";
 
 type TabValue = "only-left" | "both" | "only-right";
 
@@ -53,8 +56,10 @@ export default function Playground() {
     const [isRunning, setIsRunning] = useState<boolean>(false);
     const [runtime, setRuntime] = useState<number>(0.0);
 
+
     const workerRef = useRef<Worker | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const inputDialogRef = useRef<DialogHandle>(null);
 
     const onTabChange = (tab: string) => {
         setTabValue(tab as TabValue);
@@ -189,18 +194,70 @@ export default function Playground() {
                         const c = document.getElementById("consoleText")!;
                         c.innerText = c.innerText + event.data.message;
                         break;
+                    case "input":
+                        const maxStringLength: number = event.data.maxStringLength!;
+                        const sharedBuffer: SharedArrayBuffer = event.data.sharedBuffer!;
+                        // see worker thread for buffer scheme
+
+                        const sharedArray = new Int32Array(sharedBuffer);
+
+                        // todo: fix this
+                        // const userInput = "main thread";
+                        const userInput = await inputDialogRef.current?.open() ?? "";
+
+                        const encoder = new TextEncoder();
+                        const byteArray = encoder.encode(userInput);
+
+                        console.log("byte array:", byteArray);
+                        const length = byteArray.length;
+
+                        if(maxStringLength < length) {
+                            console.error("buffer overflow!");
+                        }
+
+
+                        // write the string into the buffer
+                        new Uint8Array(sharedBuffer, 4, length + 4).set(byteArray);
+                        console.log("Shared Buffer: ", sharedArray);
+
+                        const decode = new Uint8Array(sharedBuffer, 4, length + 4);
+                        console.log("Decode Buffer: ", decode);
+
+
+                        // write the length into the buffer LAST
+                        new Int32Array(sharedBuffer, 0, 1)[0] = length;
+
+                        // release the lock on the worker
+                        Atomics.notify(sharedArray, 0);
+
+                        break;
                     case "complete":
+                        // todo this might need to be in the the instance of number
                         setIsRunning(false);
-                        setRuntime(event.data.time);
+
+                        const delta = event.data.time;
+
+                        if (!isNaN(delta) && delta instanceof number) {
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-expect-error
+                            setRuntime(delta);
+                        }
+
+                        // setRuntime(delta);
                         break;
                     case "error":
                         toastError("Internal error");
                         break;
+                    default:
+                        console.dir(event.data);
                 }
             });
         })();
     }, []);
 
+    if (isNaN(runtime)) {
+        console.error("what the fuck???");
+    }
 
     return (
         <div className="flex flex-col min-h-screen w-full" id="playground">
@@ -327,13 +384,14 @@ export default function Playground() {
 
                                 {/* console */}
                                 <div id={"consoleText"} className={"font-mono"}></div>
-                                <Badge variant={"default"}
-                                       className={"absolute bottom-3 right-3"}>{prettyMilliseconds(Math.round(runtime))}</Badge>
+                                <Badge variant={"default"} className={"absolute bottom-3 right-3"}>{prettyMilliseconds(Math.round(runtime))}</Badge>
+                                {/*<Badge variant={"default"} className={"absolute bottom-3 right-3"}>{Math.round(runtime)}</Badge>*/}
                             </div>
                         </ResizablePanel>
                     </ResizablePanelGroup>
                 </div>
             </Tabs>
+            <InputDialog ref={inputDialogRef}></InputDialog>
         </div>
     );
 }
