@@ -32,7 +32,7 @@ async function initApLang() {
 
   let input = (prompt) => {
 
-    postMessage({type: "log", message: "debug (worker): input hook has run\n"}) // todo: remove debug
+    // postMessage({type: "log", message: "debug (worker): input hook has run\n"}) // todo: remove debug
     const maxStringLength = 1024;
     const bufferSize = 4 + maxStringLength;
 
