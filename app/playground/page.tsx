@@ -35,6 +35,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import {PresetSelector} from "@/app/playground/components/preset-selector";
 import {number} from "prop-types";
+import InputPrompt from "@/app/playground/components/input-prompt";
+import InputDialog from "@/app/playground/components/input-prompt";
 
 type TabValue = "only-left" | "both" | "only-right";
 
@@ -54,8 +56,10 @@ export default function Playground() {
     const [isRunning, setIsRunning] = useState<boolean>(false);
     const [runtime, setRuntime] = useState<number>(0.0);
 
+
     const workerRef = useRef<Worker | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const inputDialogRef = useRef<DialogHandle>(null);
 
     const onTabChange = (tab: string) => {
         setTabValue(tab as TabValue);
@@ -198,7 +202,8 @@ export default function Playground() {
                         const sharedArray = new Int32Array(sharedBuffer);
 
                         // todo: fix this
-                        const userInput = "main thread";
+                        // const userInput = "main thread";
+                        const userInput = await inputDialogRef.current?.open() ?? "";
 
                         const encoder = new TextEncoder();
                         const byteArray = encoder.encode(userInput);
@@ -224,6 +229,8 @@ export default function Playground() {
 
                         // release the lock on the worker
                         Atomics.notify(sharedArray, 0);
+
+                        break;
                     case "complete":
                         // todo this might need to be in the the instance of number
                         setIsRunning(false);
@@ -251,7 +258,6 @@ export default function Playground() {
     if (isNaN(runtime)) {
         console.error("what the fuck???");
     }
-
 
     return (
         <div className="flex flex-col min-h-screen w-full" id="playground">
@@ -385,6 +391,7 @@ export default function Playground() {
                     </ResizablePanelGroup>
                 </div>
             </Tabs>
+            <InputDialog ref={inputDialogRef}></InputDialog>
         </div>
     );
 }
