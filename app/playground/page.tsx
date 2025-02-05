@@ -220,7 +220,7 @@ export default function Playground() {
                         new Uint8Array(sharedBuffer, 4, length + 4).set(byteArray);
                         console.log("Shared Buffer: ", sharedArray);
 
-                        let decode = new Uint8Array(sharedBuffer, 4, length + 4);
+                        const decode = new Uint8Array(sharedBuffer, 4, length + 4);
                         console.log("Decode Buffer: ", decode);
 
 
