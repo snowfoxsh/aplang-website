@@ -44,7 +44,7 @@ const InputDialog = forwardRef<DialogHandle, object>((_, ref) => {
         if (prompt?.trim() !== "") {
             dialogDescription = (
                 <DialogDescription>
-                    <p>{prompt}</p>
+                    <div>{prompt}</div>
                 </DialogDescription>
             );
         }
