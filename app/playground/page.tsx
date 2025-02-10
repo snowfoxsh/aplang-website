@@ -371,7 +371,8 @@ export default function Playground() {
                     <RunButton isLoading={isRunning} onClick={handleRun}/>
                 </div>
                 {/* Left side */}
-                <div className="flex flex-grow min-w-0 p-8 items-center justify-center">
+                {/* The 886px in the component below is the max height based on the rest of the page. It's what allows auto-scrolling. */}
+                <div className="flex flex-grow min-w-0 p-8 items-center justify-center max-h-[886px]">
                     <ResizablePanelGroup direction="horizontal" className={"border flex-grow h-full rounded-md"}>
                         <ResizablePanel defaultSize={66} hidden={leftHidden}>
                             <Editor sourceCode={sourceCode} setSourceCode={setSourceCode}/>
