@@ -9,6 +9,9 @@ import Editor from "@/app/playground/components/editor";
 import {Card, CardContent, CardFooter, CardHeader} from "@/components/ui/card";
 
 export default function HomePage() {
+
+    const [sourceCode, setSourceCode] = useState<string>(`DISPLAY("Hello World!")`);
+
     return (
         <div className="flex flex-col min-h-screen">
             <Header />
