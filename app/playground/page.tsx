@@ -202,7 +202,7 @@ export default function Playground() {
 
                         // todo: fix this
                         // const userInput = "main thread";
-                        const userInput = await inputDialogRef.current?.open() ?? "";
+                        const userInput = await inputDialogRef.current?.open(event.data.prompt) ?? "";
 
                         const encoder = new TextEncoder();
                         const byteArray = encoder.encode(userInput);
@@ -391,7 +391,7 @@ export default function Playground() {
                     </ResizablePanelGroup>
                 </div>
             </Tabs>
-            <InputDialog ref={inputDialogRef}></InputDialog>
+            <InputDialog ref={inputDialogRef} prompt={"hello world"} ></InputDialog>
         </div>
     );
 }
