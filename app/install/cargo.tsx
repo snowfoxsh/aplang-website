@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Alert, AlertTitle } from "@/components/ui/alert";
-import { Terminal, TriangleAlert } from "lucide-react";
+import {Code, Terminal, TriangleAlert} from "lucide-react";
 import CodeLine from "@/components/custom/code-line";
 
 export default function CargoInstall() {
@@ -8,7 +8,7 @@ export default function CargoInstall() {
         <div>
             <p>
                 To install ApLang using Cargo, you need to have Rust installed on your system. If you dont have Rust installed,
-                you can install it using <Link href="https://rustup.rs" target="_blank" rel="noreferrer">rustup</Link>.
+                you can install it using <Link href="https://rustup.rs" target="_blank" rel="noreferrer"><CodeLine variant={"link"}>rustup</CodeLine></Link>.
             </p>
 
             <ol className="list-decimal pl-6 mt-2 space-y-2">
@@ -43,7 +43,7 @@ export default function CargoInstall() {
                     <div className="ml-2">
                         <AlertTitle className={"text-yellow-500"}>Compilation Issues</AlertTitle>
                         <p>
-                            If ApLang fails to compile, you may be missing a C compiler, such as <code className="bg-gray-200 text-black px-1 py-0.5 rounded">cc</code>.
+                            If ApLang fails to compile, you may be missing a C compiler, <CodeLine>cc</CodeLine>.
                             To fix this, install a compiler:
                         </p>
                         <ul className="list-disc pl-6 mt-2">

@@ -1,6 +1,7 @@
 import {Alert, AlertTitle} from "@/components/ui/alert";
 import {AlertCircle, Terminal} from "lucide-react";
 import CodeLine from "@/components/custom/code-line";
+import Link from "next/link";
 
 export default function WindowsInstall() {
     return (
@@ -13,16 +14,11 @@ export default function WindowsInstall() {
             <h2 className="font-semibold mt-4">Installation Steps</h2>
 
             <ol className="list-decimal pl-6 mt-2 space-y-2">
-                {/*<li>*/}
-                {/*    Open a command prompt. You can use <code className="bg-gray-200 text-black px-1 py-0.5 rounded">Terminal</code>*/}
-                {/*    (on Windows 11) or <code className="bg-gray-200 text-black px-1 py-0.5 rounded">PowerShell</code> on Windows 10.*/}
-                {/*</li>*/}
                 <li>
                     Open a command prompt. You can use <CodeLine>Terminal</CodeLine> on Windows 11 or <CodeLine>PowerShell</CodeLine> on Windows 10.
                 </li>
 
                 <li>
-                    {/*<pre className="bg-gray-100 p-2 rounded mt-1"><code>winget install aplang</code></pre>*/}
                     Run the following command to install ApLang:
 
                     <Alert>
@@ -31,25 +27,26 @@ export default function WindowsInstall() {
                     </Alert>
 
                     If you receive an error such as:
-                    {/*<pre className="bg-gray-100 p-2 rounded mt-1"><code>&#39;WinGet&#39; is not recognized as an internal or external command, operable program, or batch file.</code></pre>*/}
 
                     <Alert variant={"destructive"}>
                         <AlertCircle className={"h-4 w-4"} />
                         <AlertTitle><code>&#39;WinGet&#39; is not recognized as an internal or external command,
                             operable program, or batch file.</code></AlertTitle>
                     </Alert>
-                    You may need to install WinGet from the
-                    <a href="https://apps.microsoft.com/detail/9nblggh4nns1?hl=en-US&gl=US" className="text-blue-500 underline"> Microsoft Store</a>.
+                    You may need to install WinGet from the <Link href="https://apps.microsoft.com/detail/9nblggh4nns1?hl=en-US&gl=US" className="text-blue-500 underline">Microsoft Store</Link>.
                     After installing, rerun the command.
                 </li>
 
                 <li>
+                    Restart your command prompt to ensure the <CodeLine>PATH</CodeLine> environment variable is updated
+                </li>
+
+                <li>
                     Validate the ApLang installation by running:
-                    {/*<pre className="bg-gray-100 p-2 rounded mt-1"><code>aplang --version</code></pre>*/}
 
                     <Alert>
                         <Terminal className={"h-4 w-4"}/>
-                        <AlertTitle><code>winget install aplang</code></AlertTitle>
+                        <AlertTitle><code>aplang --version</code></AlertTitle>
                     </Alert>
 
                     You should see output similar to: <CodeLine>aplang 0.0.0</CodeLine>

@@ -48,7 +48,7 @@ export default function SourceBuild() {
                         <AlertTitle><code>cargo run --release -- --version</code></AlertTitle>
                     </Alert>
                     You should see output similar to:
-                    <code className="bg-gray-200 text-black px-1 py-0.5 rounded">aplang 0.0.0</code>
+                    <CodeLine>aplang 0.0.0</CodeLine>
                 </li>
             </ol>
 
@@ -59,7 +59,8 @@ export default function SourceBuild() {
                     <div className="ml-2">
                         <AlertTitle className={"text-yellow-500"}>Compilation Issues</AlertTitle>
                         <p>
-                            If ApLang fails to compile, you may be missing a C compiler, such as <CodeLine>cc</CodeLine>. To fix this, install a compiler:
+                            If ApLang fails to compile, you may be missing a C compiler, <CodeLine>cc</CodeLine>.
+                            To fix this, install a compiler:
                         </p>
                         <ul className="list-disc pl-6 mt-2">
                             {/*<li>On macOS, run <code className="bg-gray-200 text-black px-1 py-0.5 rounded">xcode-select --install</code>.</li>*/}
