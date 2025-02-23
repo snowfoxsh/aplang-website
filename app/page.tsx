@@ -1,68 +1,86 @@
-"use client"
+"use client";
 
+import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
+import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import React, {useState} from "react";
-import Header from "@/app/header";
+import {ArrowRightIcon, ClipboardCopyIcon} from "@radix-ui/react-icons";
+
 import Editor from "@/app/playground/components/editor";
-import {Card, CardContent, CardFooter, CardHeader} from "@/components/ui/card";
+import Header from "@/app/header";
+// import Editor from "@/app/components/editor";
+// or wherever your Editor component lives
+// import Header from "@/components/header";
+// optional header if you want a top nav
+
+const FizzBuzz = `i <- 1
+REPEAT 100 TIMES {
+  s <- ""
+  IF (i MOD 3 == 0) {
+    s <- s + "Fizz"
+  }
+  IF (i MOD 5 == 0) {
+    s <- s + "Buzz"
+  }
+  IF (LENGTH(s) == 0) {
+    s <- i
+  }
+  DISPLAY(s)
+}`
+
 
 export default function HomePage() {
-
-    const [sourceCode, setSourceCode] = useState<string>(`DISPLAY("Hello World!")`);
+    const [sourceCode, setSourceCode] = useState<string>(FizzBuzz);
 
     return (
         <div className="flex flex-col min-h-screen">
             <Header />
-            {/*<main className="min=h-[calc(100vh-57px)] flex-1">*/}
-            {/*    <div className="container relative pb-10">*/}
-            {/*        <section className="mx-auto flex max-w-[980px] flex-col items-center gap-2 py-8 md:py-12 md:pb-8 lg:py-21 lb:pb-6">*/}
-            {/*            <h1 className="text-center text-3xl font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1]">*/}
-            {/*                ApLang*/}
-            {/*            </h1>*/}
-            {/*            <span className="max-w-[800px] text-center text-lg font-light text-foreground">*/}
-            {/*                A programming language made to aid students who are taking AP Computer Science Principals*/}
-            {/*            </span>*/}
-            {/*            <div className="flex w-full items-center justify-center space-x-4 py-4 md:pb-6">*/}
-            {/*                <Button variant="default" asChild>*/}
-            {/*                    <Link href="/playground">*/}
-            {/*                        Playground*/}
-            {/*                        <ArrowRightIcon className="ml-2" />*/}
-            {/*                    </Link>*/}
-            {/*                </Button>*/}
-            {/*                <Button variant="outline" asChild>*/}
-            {/*                    <Link href="/book" target="_blank" rel="noopener noreferrer">Learn ApLang</Link>*/}
-            {/*                </Button>*/}
-            {/*            </div>*/}
-            {/*        </section>*/}
-            {/*    </div>*/}
-            {/*</main>*/}
-            <main className="min-h-[calc(100vh-57px)] flex-1">
-                <div className="container relative pb-10">
-                    <section className="mx-auto flex max-w-[980px] flex-col items-center gap-2 py-8 md:py-12 lg:py-21 lg:pb-6">
-                        <div>
-                            <h1 className="text-center text-3xl font-bold leading-tight tracking-tighter md:text-5xl lg:leading-[1.1]">
+            <main className="h-[calc(100vh-57px-57px)] flex justify-center flex-col">
+                <div className="container mx-auto py-10 px-4 gap-20">
+                    <section className="flex flex-col md:flex-row justify-between gap-8">
+
+                        {/* Left column (title, text, CTA) */}
+                        <div className="max-w-md space-y-4">
+                            <h1 className="text-4xl font-bold tracking-tight md:text-5xl">
                                 Aplang
                             </h1>
-                            <span className="max-w-[800px] text-center text-lg font-light text-foreground">
+                            <p className="text-lg">
                                 A programming language made to aid students who are taking AP Computer Science Principals
-                            </span>
-                        </div>
-                        <Card className="w-full">
-                            <CardContent className="h-64 border-b p-0 pl-2">
-                                <Editor sourceCode={sourceCode} setSourceCode={setSourceCode}/>
-                            </CardContent>
-                            <CardFooter className="p-4 flex flex-row justify-between">
-                                <span>ApLang</span>
-                                <Button>
-                                    Continue in Playground
+                            </p>
+                            <div className="flex items-center space-x-4 pt-4">
+                                <Button variant="default" asChild>
+                                    <Link href="playground">
+                                        Try ApLang
+                                        <ArrowRightIcon className="ml-2" />
+                                    </Link>
                                 </Button>
-                            </CardFooter>
-                        </Card>
+                                <Button variant="outline" asChild>
+                                    <Link href="install">
+                                        Install ApLang
+                                    </Link>
+                                </Button>
+                            </div>
+                        </div>
+
+                        {/* Right column (code editor in a card) */}
+                        <div className="w-full md:w-1/2">
+                            <Card className="relative">
+                                <CardHeader className="flex flex-row justify-center p-4 border-b">
+                                    Your Classic FizzBuzz
+                                </CardHeader>
+                                <CardContent className="p-0 pl-2 pt-1">
+                                    <Editor sourceCode={sourceCode} readonly={true} setSourceCode={setSourceCode} />
+                                </CardContent>
+                                <CardFooter className="justify-end">
+                                    <Button className="absolute bottom-7 right-7" variant="secondary" onClick={() => navigator.clipboard.writeText(sourceCode)}>
+                                        <ClipboardCopyIcon className="mr-2 h-4 w-4"/> Copy to clipboard
+                                    </Button>
+                                </CardFooter>
+                            </Card>
+                        </div>
                     </section>
                 </div>
             </main>
         </div>
-    )
+    );
 }
