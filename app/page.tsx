@@ -28,6 +28,7 @@ REPEAT 100 TIMES {
     s <- i
   }
   DISPLAY(s)
+  i <- i + 1
 }`
 
 
