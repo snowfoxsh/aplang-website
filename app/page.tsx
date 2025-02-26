@@ -8,6 +8,10 @@ import { ArrowRightIcon, ClipboardCopyIcon } from "@radix-ui/react-icons";
 import Editor from "@/app/playground/components/editor";
 import Header from "@/app/header";
 import HeartIcon from "@/assets/icons/Heart";
+import {Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious} from "@/components/ui/carousel";
+import AdvancedInstallerLogo from "@/assets/logos/AdvancedInstallerLogo";
+import Image from "next/image";
+import SalisBurySchoolLogo from "@/assets/logos/SalisburySchoolLogo.png";
 
 const FizzBuzz = `i <- 1
 REPEAT 100 TIMES {
@@ -29,7 +33,7 @@ export default function HomePage() {
     const [sourceCode, setSourceCode] = useState<string>(FizzBuzz);
 
     return (
-        <div className="flex flex-col min-h-screen bg-[#09040b]">
+        <div className="flex flex-col min-h-screen dark:bg-[#09040b]">
             <Header />
             <main className="">
                 <div className="max-w-7xl px-6 mx-auto gap-20 pt-20">
@@ -47,7 +51,7 @@ export default function HomePage() {
                                         <ArrowRightIcon className="ml-2" />
                                     </Link>
                                 </Button>
-                                <Button variant="outline" asChild>
+                                <Button variant="outline" className="border-red-800" asChild>
                                     <Link href="install">Install ApLang</Link>
                                 </Button>
                             </div>
@@ -85,9 +89,38 @@ export default function HomePage() {
                             </Card>
                         </div>
                     </section>
-                    {/*<section className="flex flex-col md:flex-row justify-start gap-8 pt-24">*/}
-                    {/*    */}
-                    {/*</section>*/}
+                    <section className="flex flex-col md:flex-row max-w-md justify-center gap-8 pt-24">
+                        <div className="max-w-lg flex flex-col items-center">
+                            <Carousel>
+                                <CarouselContent>
+                                    <CarouselItem className="basis-1/2">
+                                        <div className="p-1">
+                                            <Card>
+                                                <CardContent className="flex aspect-square items-center justify-center p-6">
+                                                <span className="text-3xl font-semibold">
+                                                    <AdvancedInstallerLogo className="w-20 h-20"/>
+                                                </span>
+                                                </CardContent>
+                                            </Card>
+                                        </div>
+                                    </CarouselItem>
+                                    <CarouselItem className="basis-1/2">
+                                        <div className="p-1">
+                                            <Card>
+                                                <CardContent className="flex aspect-square items-center justify-center p-6">
+                                                <span className="text-3xl font-semibold">
+                                                    <Image src={SalisBurySchoolLogo} alt="Salisbury School Logo" height={80} />
+                                                </span>
+                                                </CardContent>
+                                            </Card>
+                                        </div>
+                                    </CarouselItem>
+                                </CarouselContent>
+                                <CarouselPrevious className="border-red-500"/>
+                                <CarouselNext className="border-red-500"/>
+                            </Carousel>
+                        </div>
+                    </section>
                 </div>
             </main>
         </div>
