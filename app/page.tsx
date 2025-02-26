@@ -51,11 +51,22 @@ export default function HomePage() {
                                     <Link href="install">Install ApLang</Link>
                                 </Button>
                             </div>
+                            <div className="max-w-lg flex flex-col items-start pt-20">
+                                <div className="text-3xl md:text-4xl flex items-start">
+                                    Free &amp; open source
+                                    <HeartIcon className="w-12 h-12 ml-2" />
+                                </div>
+                                <div className="pt-2">Aplang is and always will be Free and Open Sourced.</div>
+                                <div className="pt-1">
+                                    This is made possible by our contributors and these companies:
+                                </div>
+                                <div className="pt-8">Supported by:</div>
+                            </div>
                         </div>
 
                         {/* Right column (code editor in a card) */}
-                        <div className="w-full md:w-1/2">
-                            <Card className="relative">
+                        <div className="flex w-full md:w-1/2 items-center">
+                            <Card className="relative w-full">
                                 <CardHeader className="flex justify-center p-4 border-b">
                                     Your Classic FizzBuzz
                                 </CardHeader>
@@ -74,19 +85,9 @@ export default function HomePage() {
                             </Card>
                         </div>
                     </section>
-                    <section className="flex flex-col md:flex-row justify-end gap-8 pt-24">
-                        <div className="max-w-lg flex flex-col items-center">
-                            <div className="text-3xl md:text-4xl flex items-center">
-                                Free &amp; open source
-                                <HeartIcon className="w-12 h-12 ml-2" />
-                            </div>
-                            <div className="pt-2">Aplang is and always will be Free and Open Sourced.</div>
-                            <div className="pt-1">
-                                This is made possible by our contributors and these companies:
-                            </div>
-                            <div className="pt-8">Supported by:</div>
-                        </div>
-                    </section>
+                    {/*<section className="flex flex-col md:flex-row justify-start gap-8 pt-24">*/}
+                    {/*    */}
+                    {/*</section>*/}
                 </div>
             </main>
         </div>
