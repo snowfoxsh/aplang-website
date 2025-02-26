@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Alert, AlertTitle } from "@/components/ui/alert";
-import {Code, Terminal, TriangleAlert} from "lucide-react";
+import {Terminal, TriangleAlert} from "lucide-react";
 import CodeLine from "@/components/custom/code-line";
 
 export default function SourceBuild() {
@@ -18,7 +18,7 @@ export default function SourceBuild() {
 
                 <li>
                     Clone the ApLang repository:
-                    <Alert>
+                    <Alert className={"m-2"}>
                         <Terminal className="h-4 w-4" />
                         <AlertTitle><code>git clone https://github.com/snowfoxsh/aplang.git</code></AlertTitle>
                     </Alert>
@@ -26,7 +26,7 @@ export default function SourceBuild() {
 
                 <li>
                     Navigate to the project directory:
-                    <Alert>
+                    <Alert className={"m-2"}>
                         <Terminal className="h-4 w-4" />
                         <AlertTitle><code>cd aplang</code></AlertTitle>
                     </Alert>
@@ -34,7 +34,7 @@ export default function SourceBuild() {
 
                 <li>
                     Build ApLang using Cargo:
-                    <Alert>
+                    <Alert className={"m-2"}>
                         <Terminal className="h-4 w-4" />
                         <AlertTitle><code>cargo build --release</code></AlertTitle>
                     </Alert>
@@ -43,7 +43,7 @@ export default function SourceBuild() {
 
                 <li>
                     Run the ApLang:
-                    <Alert>
+                    <Alert className={"m-2"}>
                         <Terminal className="h-4 w-4" />
                         <AlertTitle><code>cargo run --release -- --version</code></AlertTitle>
                     </Alert>
@@ -71,7 +71,7 @@ export default function SourceBuild() {
                         <p className="mt-2">
                             Alternatively, you can install the portable version of ApLang using:
                         </p>
-                        <Alert variant={"default"}>
+                        <Alert variant={"default"} className={"m-2"}>
                             <Terminal className="h-4 w-4" />
                             <AlertTitle><code>cargo install aplang --no-default-features --features portable</code></AlertTitle>
                         </Alert>
