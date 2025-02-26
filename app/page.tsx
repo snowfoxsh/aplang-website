@@ -29,7 +29,7 @@ export default function HomePage() {
     const [sourceCode, setSourceCode] = useState<string>(FizzBuzz);
 
     return (
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen bg-[#09040b]">
             <Header />
             <main className="">
                 <div className="max-w-7xl px-6 mx-auto gap-20 pt-20">
