@@ -288,10 +288,18 @@ export default function Playground() {
                                 </Link>
                             </NavigationMenuItem>
                             <NavigationMenuItem>
+                                <Link href="/install" passHref legacyBehavior>
+                                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                                        <span className="font-regular text-base">Install</span>
+                                        <span className="sr-only">Install</span>
+                                    </NavigationMenuLink>
+                                </Link>
+                            </NavigationMenuItem>
+                            <NavigationMenuItem>
                                 <Link href="https://github.com/snowfoxsh/aplang" passHref legacyBehavior>
                                     <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                                        <span className="font-regular text-base">Repo</span>
-                                        <span className="sr-only">Repo</span>
+                                        <span className="font-regular text-base">GitHub</span>
+                                        <span className="sr-only">GitHub</span>
                                     </NavigationMenuLink>
                                 </Link>
                             </NavigationMenuItem>

@@ -39,6 +39,14 @@ export default function Header() {
                                 </NavigationMenuLink>
                             </Link>
                         </NavigationMenuItem>
+                        <NavigationMenuItem>
+                            <Link href="/install" passHref legacyBehavior>
+                                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                                    <span className="text-base font-medium">Install</span>
+                                    <span className="sr-only">Install</span>
+                                </NavigationMenuLink>
+                            </Link>
+                        </NavigationMenuItem>
                     </NavigationMenuList>
                 </NavigationMenu>
                 <div className="ml-auto flex items-center gap-4">
