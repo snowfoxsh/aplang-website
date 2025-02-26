@@ -31,7 +31,7 @@ export default function InstallPage() {
     return (
         <>
             <Header />
-            <div className="max-w-7xl mx-auto p-6">
+            <div className="max-w-6xl mx-auto p-6">
                 <h1 className="text-6xl font-bold mb-6">Install ApLang</h1>
 
                 <section className="mb-10">

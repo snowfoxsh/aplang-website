@@ -13,7 +13,7 @@ import React from "react";
 export default function Header() {
     return (
         <header className="z-50 sticky top-0 w-full bg-background/95 border-b backdrop-blur-sm dark:bg-black/60 border-border/40">
-            <div className="max-w-7xl mx-auto p-3 flex items-center">
+            <div className="max-w-7xl mx-auto p-3 px-6 flex items-center">
                 <Link
                     href="/"
                     className="flex items-center transition-opacity duration-300 hover:opacity-85 mr-4"
