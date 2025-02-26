@@ -8,6 +8,8 @@ import {ArrowRightIcon, ClipboardCopyIcon} from "@radix-ui/react-icons";
 
 import Editor from "@/app/playground/components/editor";
 import Header from "@/app/header";
+import Image from "next/image";
+import HeartIcon from "@/assets/icons/Heart";
 // import Editor from "@/app/components/editor";
 // or wherever your Editor component lives
 // import Header from "@/components/header";
@@ -77,6 +79,18 @@ export default function HomePage() {
                                     </Button>
                                 </CardFooter>
                             </Card>
+                        </div>
+                    </section>
+                    <section className="flex flex-col md:flex-row justify-center gap-8 pt-24">
+                        <div className="max-w-lg flex flex-col items-center">
+                            <div className="text-3xl md:text-4xl flex items-center">
+                                Free & open source
+                                {/*<Image src="https://vite.dev/heart.svg" alt="Heart" width={60} height={60} />*/}
+                                <HeartIcon className="w-12 h-12 ml-2"/>
+                            </div>
+                            <div className="pt-2">Aplang is and always will be Free and Open Sourced.</div>
+                            <div className="pt-1">This is made possible by our contributors and these companies:</div>
+                            <div className="pt-8">Supported by:</div>
                         </div>
                     </section>
                 </div>
