@@ -274,8 +274,8 @@ export default function Playground() {
                             <NavigationMenuItem>
                                 <Link href="/book" passHref legacyBehavior>
                                     <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                                        <span className="font-regular text-base">Book</span>
-                                        <span className="sr-only">Book</span>
+                                        <span className="font-regular text-base">Docs</span>
+                                        <span className="sr-only">Docs</span>
                                     </NavigationMenuLink>
                                 </Link>
                             </NavigationMenuItem>
