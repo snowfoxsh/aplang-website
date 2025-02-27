@@ -91,7 +91,7 @@ export default function HomePage() {
                                         variant="secondary"
                                         onClick={() => navigator.clipboard.writeText(sourceCode)}
                                     >
-                                        <ClipboardCopyIcon className="mr-2 h-4 w-4"/> Copy to clipboard
+                                        <ClipboardCopyIcon className="mr-2 h-4 w-4"/> Copy
                                     </Button>
                                 </CardFooter>
                             </Card>
