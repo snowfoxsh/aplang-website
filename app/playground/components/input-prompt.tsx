@@ -1,61 +1,35 @@
 "use client";
 
-import React, { useState, forwardRef, useImperativeHandle } from "react";
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogFooter,
-    DialogDescription
-} from "@/components/ui/dialog";
+import { useState, forwardRef, useImperativeHandle } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 // Define the DialogHandle interface
 export interface DialogHandle {
-    open: (prompt: string | null) => Promise<string>;
+    open: () => Promise<string>;
 }
-
-// export interface InputDialogProps {
-//     prompt?: string | null;
-// }
 
 // Dialog Component using forwardRef
 const InputDialog = forwardRef<DialogHandle, object>((_, ref) => {
     const [isOpen, setIsOpen] = useState(false);
     const [inputValue, setInputValue] = useState("");
     const [resolvePromise, setResolvePromise] = useState<((value: string) => void) | null>(null);
-    const [prompt, setPrompt] = useState<string | null>(null);
-
 
     // Expose `open` method via ref
     useImperativeHandle(ref, () => ({
-        open: (prompt) =>
+        open: () =>
             new Promise<string>((resolve) => {
                 setResolvePromise(() => resolve); // Store the resolve function
-                setPrompt(prompt); // Set the prompt
                 setIsOpen(true); // Show the dialog
             }),
     }));
-
-    let dialogDescription = (<></>);
-    if (prompt !== null) {
-        if (prompt?.trim() !== "") {
-            dialogDescription = (
-                <DialogDescription>
-                    <div>{prompt}</div>
-                </DialogDescription>
-            );
-        }
-    }
 
     // Handle submission
     const handleSubmit = () => {
         if (resolvePromise) resolvePromise(inputValue); // Resolve with input value
         setIsOpen(false);
         setInputValue(""); // Reset input
-        setPrompt(null);
     };
 
     // Handle key press
@@ -70,7 +44,6 @@ const InputDialog = forwardRef<DialogHandle, object>((_, ref) => {
             <DialogContent className={"[&>button]:hidden"}>
                 <DialogHeader>
                     <DialogTitle>Enter a Value</DialogTitle>
-                    {dialogDescription}
                 </DialogHeader>
                 <Input
                     value={inputValue}
