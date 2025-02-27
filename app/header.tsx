@@ -26,8 +26,8 @@ export default function Header() {
                         <NavigationMenuItem>
                             <Link href="/book" passHref legacyBehavior>
                                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                                    <span className="text-base font-medium">Book</span>
-                                    <span className="sr-only">Book</span>
+                                    <span className="text-base font-medium">Docs</span>
+                                    <span className="sr-only">Docs</span>
                                 </NavigationMenuLink>
                             </Link>
                         </NavigationMenuItem>
