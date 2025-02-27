@@ -7,6 +7,8 @@ import {Loader2} from "lucide-react";
 interface EditorProps {
     sourceCode: string;
     setSourceCode: Dispatch<SetStateAction<string>>;
+    readonly?: boolean;
+    useMemory?: boolean;
 }
 
 
@@ -21,7 +23,9 @@ export default function Editor(props: EditorProps) {
     const [themeLoaded, setThemeLoaded] = useState(false);
 
     const onEditorChange = useCallback((source: string) => {
-        localStorage.setItem("sourceCode", source);
+        if (props.useMemory) {
+            localStorage.setItem("sourceCode", source);
+        }
         setSourceCode(source);
     }, [setSourceCode]);
 
@@ -39,7 +43,9 @@ export default function Editor(props: EditorProps) {
 
     // when the component is mounted set the source from storage
     useEffect(() => {
-        setSourceCode(localStorage.getItem("sourceCode") || "");
+        if (props.useMemory) {
+            setSourceCode(localStorage.getItem("sourceCode") || "");
+        }
     }, [setSourceCode]);
 
     // if the theme is changed update
@@ -57,6 +63,8 @@ export default function Editor(props: EditorProps) {
     }
 
     return <ReactCodeMirror
+        editable={!props.readonly}
+        readOnly={props.readonly}
         onChange={onEditorChange}
         value={sourceCode}
         className={"flex-1 h-full w-full"}
