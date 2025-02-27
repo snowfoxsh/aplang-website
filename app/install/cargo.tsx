@@ -1,13 +1,13 @@
 import Link from "next/link";
 import { Alert, AlertTitle } from "@/components/ui/alert";
-import { Code, Terminal, TriangleAlert } from "lucide-react";
+import { Terminal, TriangleAlert } from "lucide-react";
 import CodeLine from "@/components/custom/code-line";
 
 export default function SourceBuild() {
     return (
         <div className="p-4 space-y-6">
             <p className="text-base">
-                To build ApLang from source, you need to have Rust and Cargo installed on your system. If you don't have Rust installed, you can install it using{" "}
+                To build ApLang from source, you need to have Rust and Cargo installed on your system. If you dont have Rust installed, you can install it using{" "}
                 <Link href="https://rustup.rs" target="_blank" rel="noreferrer">
                     <CodeLine variant="link">rustup</CodeLine>
                 </Link>.

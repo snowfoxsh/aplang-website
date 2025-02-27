@@ -27,9 +27,9 @@ export default function MacOSInstall() {
                     Run the installer and follow the instructions to complete the installation. Leave the default installation path as is.
                 </li>
             </ol>
-            <Alert className="border-l-4 border-green-500 p-4">
+            <Alert className="border-l-4 border-purple-500 p-4">
                 <div className="flex items-start">
-                    <InfoIcon className="h-4 w-4 text-green-500 mt-1" />
+                    <InfoIcon className="h-4 w-4 text-purple-500 mt-1" />
                     <div className="ml-2">
                         Remember to update ApLang regularly to get the latest features and bug fixes.
                     </div>
