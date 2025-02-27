@@ -50,7 +50,7 @@ async function initApLang() {
     new DataView(sharedBuffer).setInt32(0, -1); // string size cannot be < 0
 
     // postMessage({type: "debugLog", message: `debug (worker): view of shared array: ${sharedArray}\n`})
-    postMessage({type: "input", sharedBuffer: sharedBuffer, maxStringLength: maxStringLength, prompt: prompt});
+    postMessage({type: "input", sharedBuffer: sharedBuffer, maxStringLength: maxStringLength});
 
     // don't panic, freeze the worker until our data is ready
     Atomics.wait(sharedArray, 0, -1);

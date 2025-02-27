@@ -202,7 +202,7 @@ export default function Playground() {
 
                         // todo: fix this
                         // const userInput = "main thread";
-                        const userInput = await inputDialogRef.current?.open(event.data.prompt) ?? "";
+                        const userInput = await inputDialogRef.current?.open() ?? "";
 
                         const encoder = new TextEncoder();
                         const byteArray = encoder.encode(userInput);
@@ -288,18 +288,10 @@ export default function Playground() {
                                 </Link>
                             </NavigationMenuItem>
                             <NavigationMenuItem>
-                                <Link href="/install" passHref legacyBehavior>
-                                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                                        <span className="font-regular text-base">Install</span>
-                                        <span className="sr-only">Install</span>
-                                    </NavigationMenuLink>
-                                </Link>
-                            </NavigationMenuItem>
-                            <NavigationMenuItem>
                                 <Link href="https://github.com/snowfoxsh/aplang" passHref legacyBehavior>
                                     <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                                        <span className="font-regular text-base">GitHub</span>
-                                        <span className="sr-only">GitHub</span>
+                                        <span className="font-regular text-base">Repo</span>
+                                        <span className="sr-only">Repo</span>
                                     </NavigationMenuLink>
                                 </Link>
                             </NavigationMenuItem>
@@ -323,13 +315,13 @@ export default function Playground() {
 
             <Separator/>
 
-            <Tabs className="flex flex-grow flex-row-reverse" defaultValue="both" value={tabValue}
+            <Tabs className="flex flex-grow flex-row-reverse" defaultValue={"both"} value={tabValue}
                   onValueChange={onTabChange}>
                 {/* Right side */}
                 <div className="flex flex-col w-64 justify-between flex-shrink-0 py-8 pr-8 space-y-2">
-                    <div className="flex flex-col space-y-4">
+                    <div className={"flex flex-col space-y-4"}>
                     {/*mode*/}
-                        <div className="flex flex-col space-y-2">
+                        <div className={"flex flex-col space-y-2"}>
                             <HoverCard openDelay={500}>
                                 <HoverCardTrigger asChild>
                             <span
@@ -337,7 +329,7 @@ export default function Playground() {
                                 Mode
                             </span>
                                 </HoverCardTrigger>
-                                <HoverCardContent className="max-w-lg text-sm">
+                                <HoverCardContent className={"max-w-lg text-sm"}>
                                     Choose the interface that best suits your task
                                 </HoverCardContent>
                             </HoverCard>
@@ -345,13 +337,13 @@ export default function Playground() {
                         </div>
                         <Separator/>
                         {/*clear*/}
-                        <div className="flex flex-col space-y-2">
+                        <div className={"flex flex-col space-y-2"}>
                         <span
-                            className="text-md font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                            className={"text-md font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"}>
                             Clear
                         </span>
-                            <div className="flex flex-row justify-between space-x-2">
-                                <Button variant="secondary" className="flex-grow" onClick={() => {
+                            <div className={"flex flex-row justify-between space-x-2"}>
+                                <Button variant={"secondary"} className={"flex-grow"} onClick={() => {
                                     document.getElementById("consoleText")!.innerText = ""
                                 }}>Console</Button>
                                 <AlertDialog>
@@ -379,27 +371,26 @@ export default function Playground() {
                     <RunButton isLoading={isRunning} onClick={handleRun}/>
                 </div>
                 {/* Left side */}
-                {/* The 886px in the component below is the max height based on the rest of the page. It's what allows auto-scrolling. */}
-                <div className="flex flex-grow min-w-0 p-8 items-center justify-center max-h-[calc(100vh-65px)]">
-                    <ResizablePanelGroup direction="horizontal" className="border flex-grow h-full rounded-md">
+                <div className="flex flex-grow min-w-0 p-8 items-center justify-center">
+                    <ResizablePanelGroup direction="horizontal" className={"border flex-grow h-full rounded-md"}>
                         <ResizablePanel defaultSize={66} hidden={leftHidden}>
-                            <Editor sourceCode={sourceCode} setSourceCode={setSourceCode} useMemory/>
+                            <Editor sourceCode={sourceCode} setSourceCode={setSourceCode}/>
                         </ResizablePanel>
                         <ResizableHandle withHandle={!handleHidden} disabled={handleHidden}/>
-                        <ResizablePanel className="bg-muted relative" defaultSize={34} minSize={15} maxSize={70}
+                        <ResizablePanel className={"bg-muted"} defaultSize={34} minSize={15} maxSize={70}
                                         hidden={rightHidden}>
-                            <div className="h-full p-2 overflow-scroll">
+                            <div className={"relative flex h-full p-2"}>
 
                                 {/* console */}
-                                <div id="consoleText" className="font-mono"></div>
-
+                                <div id={"consoleText"} className={"font-mono"}></div>
+                                <Badge variant={"default"} className={"absolute bottom-3 right-3"}>{prettyMilliseconds(Math.round(runtime))}</Badge>
+                                {/*<Badge variant={"default"} className={"absolute bottom-3 right-3"}>{Math.round(runtime)}</Badge>*/}
                             </div>
-                            <Badge variant="default" className="absolute bottom-3 right-3">{prettyMilliseconds(Math.round(runtime))}</Badge>
                         </ResizablePanel>
                     </ResizablePanelGroup>
                 </div>
             </Tabs>
-            <InputDialog ref={inputDialogRef} />
+            <InputDialog ref={inputDialogRef}></InputDialog>
         </div>
     );
 }
