@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Header from "@/app/header";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import WindowsInstall from "@/app/install/windows";
+// import WinGetInstall from "@/app/install/win-get";
 import MacOSInstall from "@/app/install/macos";
 import CargoInstall from "@/app/install/cargo";
 import SourceBuild from "@/app/install/source";
@@ -11,6 +11,7 @@ import Link from "next/link";
 import CodeLine from "@/components/custom/code-line";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Terminal } from "lucide-react";
+import MicrosoftStoreInstall from "@/app/install/ms-store";
 
 export default function InstallPage() {
     const [platform, setPlatform] = useState<string | undefined>(undefined);
@@ -18,8 +19,8 @@ export default function InstallPage() {
     useEffect(() => {
         if (typeof window !== "undefined") {
             const userAgent = navigator.userAgent.toLowerCase();
-            if (userAgent.includes("windows")) {
-                setPlatform("windows");
+            if (userAgent.includes("ms-store")) {
+                setPlatform("ms-store");
             } else if (userAgent.includes("mac os") || userAgent.includes("macintosh")) {
                 setPlatform("macos");
             } else {
@@ -47,17 +48,18 @@ export default function InstallPage() {
                         onValueChange={setPlatform}
                         className="space-y-4"
                     >
-                        <AccordionItem value="windows"
+                        <AccordionItem value="win-get"
                                        className="text-2xl rounded-md shadow-sm transition-all duration-200">
-                            <AccordionTrigger>Windows</AccordionTrigger>
+                            <AccordionTrigger>Microsoft Store</AccordionTrigger>
                             <AccordionContent>
-                                <WindowsInstall/>
+                                <MicrosoftStoreInstall/>
                             </AccordionContent>
                         </AccordionItem>
 
+
                         <AccordionItem value="macos"
                                        className="text-2xl rounded-md shadow-sm transition-all duration-200">
-                            <AccordionTrigger>macOS</AccordionTrigger>
+                            <AccordionTrigger>MacOS</AccordionTrigger>
                             <AccordionContent>
                                 <MacOSInstall/>
                             </AccordionContent>
@@ -71,6 +73,13 @@ export default function InstallPage() {
                             </AccordionContent>
                         </AccordionItem>
 
+                        {/*<AccordionItem value="win-get"*/}
+                        {/*               className="text-2xl rounded-md shadow-sm transition-all duration-200">*/}
+                        {/*    <AccordionTrigger>WinGet</AccordionTrigger>*/}
+                        {/*    <AccordionContent>*/}
+                        {/*        <WinGetInstall/>*/}
+                        {/*    </AccordionContent>*/}
+                        {/*</AccordionItem>*/}
                         <AccordionItem value="source-build"
                                        className="text-2xl rounded-md shadow-sm transition-all duration-200">
                             <AccordionTrigger>Build from source</AccordionTrigger>

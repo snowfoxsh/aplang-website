@@ -3,7 +3,7 @@ import { AlertCircle, Terminal } from "lucide-react";
 import CodeLine from "@/components/custom/code-line";
 import Link from "next/link";
 
-export default function WindowsInstall() {
+export default function WinGetInstall() {
     return (
         <div className="p-4 space-y-6">
             <p className="text-base">
