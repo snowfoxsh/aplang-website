@@ -37,6 +37,7 @@ next-env.d.ts
 
 # rust
 /wasm-target/target
+/wasm-target/Cargo.lock
 
 # idea
 .idea
