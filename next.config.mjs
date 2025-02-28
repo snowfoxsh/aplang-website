@@ -9,7 +9,17 @@ const nextConfig = {
         permanent: true,
       },
       {
+        source: "/docs",
+        destination: "/book/std/core.html",
+        permanent: true,
+      },
+      {
         source: '/book/:path((?!.*\\.).*)',
+        destination: '/book/:path.html',
+        permanent: true,
+      },
+      {
+        source: '/docs/:path((?!.*\\.).*)',
         destination: '/book/:path.html',
         permanent: true,
       },
