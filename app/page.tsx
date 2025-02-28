@@ -128,8 +128,8 @@ export default function HomePage() {
                             </Card>
                         </div>
                     </section>
-                    <section className="flex max-w-md -translate-x-8 flex-col justify-center gap-8 pt-10 md:flex-row">
-                        <div className="flex max-w-sm flex-col items-center">
+                    <section className="flex max-w-md md:-translate-x-8 flex-col justify-center gap-8 pt-10 pb-20 md:flex-row">
+                        <div className="flex max-w-sm flex-col items-center flex-grow">
                             <div className="mb-4 w-full pt-8 text-center text-2xl">
                                 Supporters
                             </div>
