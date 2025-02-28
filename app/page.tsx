@@ -47,6 +47,7 @@ export default function HomePage() {
         <div className="flex min-h-screen flex-col">
             <div className={'overflow-x-hidden'}>
                 <Image
+                    loading={"eager"}
                     src="/gradients/blue-purple-1.svg"
                     alt="background gradient"
                     fill
@@ -140,7 +141,15 @@ export default function HomePage() {
                                             <Card>
                                                 <CardContent className="flex aspect-square items-center justify-center p-4">
                                                     <span className="text-2xl font-semibold">
-                                                        <AdvancedInstallerLogo className="h-12 w-12" />
+                                                        <Link href={"https://www.salisburyschool.org/"}>
+                                                        <Image
+                                                            loading={"eager"}
+                                                            src={SalisBurySchoolLogo}
+                                                            alt="Salisbury School Logo"
+                                                            width={43.5}
+                                                            height={48}
+                                                        />
+                                                        </Link>
                                                     </span>
                                                 </CardContent>
                                             </Card>
@@ -151,17 +160,15 @@ export default function HomePage() {
                                             <Card>
                                                 <CardContent className="flex aspect-square items-center justify-center p-4">
                                                     <span className="text-2xl font-semibold">
-                                                        <Image
-                                                            src={SalisBurySchoolLogo}
-                                                            alt="Salisbury School Logo"
-                                                            width={43.5}
-                                                            height={48}
-                                                        />
+                                                        <Link href={"https://www.advancedinstaller.com/"}>
+                                                            <AdvancedInstallerLogo className="h-12 w-12" />
+                                                        </Link>
                                                     </span>
                                                 </CardContent>
                                             </Card>
                                         </div>
                                     </CarouselItem>
+
                                 </CarouselContent>
 
                                 <CarouselPrevious className="border-dashed" />
