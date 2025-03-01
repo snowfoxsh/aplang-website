@@ -391,7 +391,7 @@ export default function Playground() {
                             <div className="h-full p-2 overflow-scroll">
 
                                 {/* console */}
-                                <div id="consoleText" className="font-mono"></div>
+                                <div id="consoleText" className="font-firacode"></div>
 
                             </div>
                             <Badge variant="default" className="absolute bottom-3 right-3">{prettyMilliseconds(Math.round(runtime))}</Badge>
