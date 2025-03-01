@@ -17,6 +17,16 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
+import { Fira_Code } from 'next/font/google'
+
+const firaCode = Fira_Code({
+    subsets: ['latin'],         // or 'latin-ext', etc. as needed
+    weight: ['400', '500', '700'], // whichever weights you want
+    variable: '--font-fira-code' // a custom CSS variable (optional but recommended)
+})
+
+
+
 export const metadata: Metadata = {
   title: "ApLang",
   description: "The ApLang Website",
@@ -32,7 +42,7 @@ export default function RootLayout({
 }>) {
   return (
       <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} ${firaCode.variable} antialiased`}>
       {/* Umami Analytics Script */}
       <Script
           strategy="afterInteractive"
@@ -40,7 +50,7 @@ export default function RootLayout({
           data-website-id="fb7a7cc7-adf5-4283-89cd-b875fe6dddf1"
           defer
       />
-      <Toaster position={"bottom-left"} duration={5000}/>
+      <Toaster position={"bottom-left"} duration={3500}/>
       <ThemeProvider attribute={"class"} defaultTheme={"system"} enableSystem={true} disableTransitionOnChange={true}>
           {children}
       </ThemeProvider>

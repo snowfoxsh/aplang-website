@@ -23,6 +23,7 @@ import {
 import AdvancedInstallerLogo from '@/assets/logos/AdvancedInstallerLogo';
 import Image from 'next/image';
 import SalisBurySchoolLogo from '@/assets/logos/SalisburySchoolLogo.png';
+import {toast} from "sonner";
 
 const FizzBuzz = `i <- 1
 REPEAT 100 TIMES {
@@ -117,9 +118,9 @@ export default function HomePage() {
                                         className="absolute bottom-7 right-7"
                                         variant="secondary"
                                         onClick={() =>
-                                            navigator.clipboard.writeText(
-                                                sourceCode
-                                            )
+                                            navigator.clipboard.writeText(sourceCode)
+                                                .catch(() => {toast.loading("Failed to copy code")})
+                                                .then(() => toast.success("Copied code to clipboard"))
                                         }
                                     >
                                         <ClipboardCopyIcon className="mr-2 h-4 w-4" />{' '}

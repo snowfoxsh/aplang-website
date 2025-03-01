@@ -16,6 +16,9 @@ const config: Config = {
   		}
   	},
   	extend: {
+		fontFamily: {
+			firacode: ['var(--font-fira-code)', 'monospace'],
+		},
   		colors: {
 			  // accent: '#d486ea',
   			background: 'hsl(var(--background))',
