@@ -19,12 +19,13 @@ export default function InstallPage() {
     useEffect(() => {
         if (typeof window !== "undefined") {
             const userAgent = navigator.userAgent.toLowerCase();
-            if (userAgent.includes("ms-store")) {
+
+            if (userAgent.includes("windows") || userAgent.includes("win32") || userAgent.includes("win64")) {
                 setPlatform("ms-store");
             } else if (userAgent.includes("mac os") || userAgent.includes("macintosh")) {
                 setPlatform("macos");
             } else {
-                setPlatform("cargo"); // Default to Cargo for Linux/unknown
+                setPlatform("cargo"); // default for Linux/unknown
             }
         }
     }, []);
@@ -48,7 +49,7 @@ export default function InstallPage() {
                         onValueChange={setPlatform}
                         className="space-y-4"
                     >
-                        <AccordionItem value="win-get"
+                        <AccordionItem value="ms-store"
                                        className="text-2xl rounded-md shadow-sm transition-all duration-200">
                             <AccordionTrigger>Microsoft Store</AccordionTrigger>
                             <AccordionContent>
