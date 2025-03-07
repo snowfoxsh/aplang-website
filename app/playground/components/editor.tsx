@@ -22,7 +22,7 @@ function defineAPLang() {
         name: "aplang",
 
         // Token handling
-        token(stream, state) {
+        token(stream, state:  {inComment: boolean, inString: boolean, stringChar: null}) {
             // Handle comments
             if (stream.match('//')) {
                 stream.skipToEnd();
@@ -66,6 +66,8 @@ function defineAPLang() {
 
             // Start of a string
             if (stream.peek() === '"' || stream.peek() === "'") {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-expect-error
                 state.stringChar = stream.next(); // Store the quote character
                 state.inString = true;
                 return 'string';
@@ -134,6 +136,30 @@ function defineAPLang() {
 }
 
 
+// Light mode theme (GitHub-inspired)
+const lightTheme = HighlightStyle.define([
+    { tag: tags.keyword, color: '#D73A49' },
+    { tag: tags.atom, color: '#005CC5' },
+    { tag: tags.comment, color: '#6A737D' },
+    { tag: tags.string, color: '#032F62' },
+    { tag: tags.number, color: '#005CC5' },
+    { tag: tags.operator, color: '#D73A49' },
+    { tag: tags.bracket, color: '#24292E' },
+    { tag: tags.variableName, color: '#E36209' },
+]);
+
+// Dark mode theme (Dracula-inspired)
+const darkTheme = HighlightStyle.define([
+    { tag: tags.keyword, color: '#FF79C6' },
+    { tag: tags.atom, color: '#BD93F9' },
+    { tag: tags.comment, color: '#6272A4' },
+    { tag: tags.string, color: '#F1FA8C' },
+    { tag: tags.number, color: '#BD93F9' },
+    { tag: tags.operator, color: '#FF79C6' },
+    { tag: tags.bracket, color: '#F8F8F2' },
+    { tag: tags.variableName, color: '#8BE9FD' },
+]);
+
 export default function Editor(props: EditorProps) {
     const {sourceCode, setSourceCode} = props;
 
@@ -149,7 +175,7 @@ export default function Editor(props: EditorProps) {
             localStorage.setItem("sourceCode", source);
         }
         setSourceCode(source);
-    }, [setSourceCode]);
+    }, [setSourceCode, props.useMemory]);
 
     // detect mount
     useEffect(() => {
@@ -168,7 +194,7 @@ export default function Editor(props: EditorProps) {
         if (props.useMemory) {
             setSourceCode(localStorage.getItem("sourceCode") || "");
         }
-    }, [setSourceCode]);
+    }, [setSourceCode, props.useMemory]);
 
     // if the theme is changed update
     useEffect(() => {
@@ -184,20 +210,12 @@ export default function Editor(props: EditorProps) {
         )
     }
 
-    const apLangTheme = HighlightStyle.define([
-        { tag: tags.keyword, color: '#07a' },
-        { tag: tags.atom, color: '#219' },
-        { tag: tags.comment, color: '#940' },
-        { tag: tags.string, color: '#a11' },
-        { tag: tags.number, color: '#164' },
-        { tag: tags.operator, color: '#a11' },
-        { tag: tags.bracket, color: '#555' },
-        { tag: tags.variableName, color: '#00f' }
-    ]);
+    // Determine which syntax highlighting theme to use based on the current theme
+    const syntaxTheme = resolvedTheme === 'dark' ? darkTheme : lightTheme;
 
     const aplang = defineAPLang();
     return <ReactCodeMirror
-        extensions={[aplang, syntaxHighlighting(apLangTheme)]}
+        extensions={[aplang, syntaxHighlighting(syntaxTheme)]}
         editable={!props.readonly}
         readOnly={props.readonly}
         onChange={onEditorChange}
