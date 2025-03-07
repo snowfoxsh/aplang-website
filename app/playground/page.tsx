@@ -97,7 +97,6 @@ export default function Playground() {
             if (event.altKey && event.key === 'r') {
                 event.preventDefault();
                 await handleRun();
-                toastError("Run job");
             }
         },
         [handleRun] // Dependencies
