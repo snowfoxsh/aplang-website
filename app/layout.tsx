@@ -50,7 +50,7 @@ export default function RootLayout({
           data-website-id="fb7a7cc7-adf5-4283-89cd-b875fe6dddf1"
           defer
       />
-      <Toaster position={"bottom-left"} duration={3500}/>
+      <Toaster position={"bottom-left"} duration={3500} richColors={true}/>
       <ThemeProvider attribute={"class"} defaultTheme={"system"} enableSystem={true} disableTransitionOnChange={true}>
           {children}
       </ThemeProvider>

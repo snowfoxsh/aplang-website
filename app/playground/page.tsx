@@ -40,7 +40,10 @@ import InputDialog, {DialogHandle} from "@/app/playground/components/input-promp
 type TabValue = "only-left" | "both" | "only-right";
 
 function toastError(message: string) {
-    toast.error(message);
+    toast.error(`${message}. Reload the page to try again. If the problem persists clear your browser data.`, {
+        duration: 10000,
+        richColors: true
+    });
 }
 
 export default function Playground() {
@@ -94,7 +97,7 @@ export default function Playground() {
             if (event.altKey && event.key === 'r') {
                 event.preventDefault();
                 await handleRun();
-                console.log("Run with keybind");
+                toastError("Run job");
             }
         },
         [handleRun] // Dependencies
@@ -166,7 +169,8 @@ export default function Playground() {
         (async () => {
             const timer = setTimeout(() => {
                 console.error("timeout: could not initialize worker")
-                toast.error("timeout: failed to initialize worker worker");
+                // toast.error("timeout: failed to initialize worker worker");
+                toastError("Timeout: Failed to initialize web worker");
             }, 3000);
 
 
@@ -245,7 +249,7 @@ export default function Playground() {
                         // setRuntime(delta);
                         break;
                     case "error":
-                        toastError("Internal error");
+                        toastError("Internal error. This is likely a bug. If it persists make an issue on GitHub.");
                         break;
                     default:
                         console.dir(event.data);
