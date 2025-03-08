@@ -41,7 +41,7 @@ export default function SettingsModal({ vimMode, setVimMode }: SettingsModalProp
             }
         }
         // Only run this effect once on mount
-    });
+    }, []); // Empty dependency array
 
     // Update localStorage whenever vimMode changes
     useEffect(() => {
