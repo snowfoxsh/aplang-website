@@ -36,6 +36,7 @@ import {
 import {PresetSelector} from "@/app/playground/components/preset-selector";
 import {number} from "prop-types";
 import InputDialog, {DialogHandle} from "@/app/playground/components/input-prompt";
+import SettingsModal from "@/app/playground/components/settings";
 
 type TabValue = "only-left" | "both" | "only-right";
 
@@ -50,6 +51,7 @@ export default function Playground() {
     const [leftHidden, setLeftHidden] = useState(false);
     const [handleHidden, setHandleHidden] = useState(false);
     const [rightHidden, setRightHidden] = useState(false);
+    const [vimMode, setVimMode] = useState<boolean>(false);
 
     const [tabValue, setTabValue] = useState<TabValue>("both")
 
@@ -239,9 +241,9 @@ export default function Playground() {
 
                         const delta = event.data.time;
 
+                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                        // @ts-expect-error
                         if (!isNaN(delta) && delta instanceof number) {
-                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                            // @ts-expect-error
                             setRuntime(delta);
                         }
 
@@ -320,6 +322,7 @@ export default function Playground() {
                     <PresetSelector setSourceCode={setSourceCode} />
                     <Button variant="secondary" onClick={handleImport}>Import</Button>
                     <Button variant="outline" onClick={handleExport}>Export</Button>
+                    <SettingsModal vimMode={vimMode} setVimMode={setVimMode} />
                     <ColorModeToggle/>
                 </div>
             </div>
@@ -386,7 +389,7 @@ export default function Playground() {
                 <div className="flex flex-grow min-w-0 p-8 items-center justify-center max-h-[calc(100vh-65px)]">
                     <ResizablePanelGroup direction="horizontal" className="border flex-grow h-full rounded-md">
                         <ResizablePanel defaultSize={66} hidden={leftHidden}>
-                            <Editor sourceCode={sourceCode} setSourceCode={setSourceCode} useMemory/>
+                            <Editor sourceCode={sourceCode} setSourceCode={setSourceCode} useMemory vimMode={vimMode}/>
                         </ResizablePanel>
                         <ResizableHandle withHandle={!handleHidden} disabled={handleHidden}/>
                         <ResizablePanel className="bg-muted relative" defaultSize={34} minSize={15} maxSize={70}

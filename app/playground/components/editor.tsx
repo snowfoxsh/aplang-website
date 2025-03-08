@@ -9,12 +9,14 @@ import {
     syntaxHighlighting,
 } from '@codemirror/language';
 import {tags} from "@lezer/highlight"
+import {vim} from "@replit/codemirror-vim";
 
 interface EditorProps {
     sourceCode: string;
     setSourceCode: Dispatch<SetStateAction<string>>;
     readonly?: boolean;
     useMemory?: boolean;
+    vimMode?: boolean;
 }
 
 function defineAPLang() {
@@ -161,7 +163,7 @@ const darkTheme = HighlightStyle.define([
 ]);
 
 export default function Editor(props: EditorProps) {
-    const {sourceCode, setSourceCode} = props;
+    const {sourceCode, setSourceCode, vimMode = false} = props;
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
@@ -213,9 +215,15 @@ export default function Editor(props: EditorProps) {
     // Determine which syntax highlighting theme to use based on the current theme
     const syntaxTheme = resolvedTheme === 'dark' ? darkTheme : lightTheme;
 
-    const aplang = defineAPLang();
+    const extensions = [defineAPLang(), syntaxHighlighting(syntaxTheme)];
+
+
+    if (vimMode) {
+        extensions.push(vim())
+    }
+
     return <ReactCodeMirror
-        extensions={[aplang, syntaxHighlighting(syntaxTheme)]}
+        extensions={extensions}
         editable={!props.readonly}
         readOnly={props.readonly}
         onChange={onEditorChange}
