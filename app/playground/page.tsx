@@ -41,7 +41,7 @@ import SettingsModal from "@/app/playground/components/settings";
 type TabValue = "only-left" | "both" | "only-right";
 
 function toastError(message: string) {
-    toast.error(`${message}. Reload the page to try again. If the problem persists clear your browser data.`, {
+    toast.error(`${message}. Try refreshing first then clearing cache.`, {
         duration: 10000,
         richColors: true
     });
