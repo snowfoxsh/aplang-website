@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/carousel';
 import AdvancedInstallerLogo from '@/assets/logos/AdvancedInstallerLogo';
 import Image from 'next/image';
-import SalisBurySchoolLogo from '@/assets/logos/SalisburySchoolLogo.png';
+import SalisburySchoolLogo from '@/assets/logos/SalisburySchoolLogo.png';
 import {toast} from "sonner";
 
 const FizzBuzz = `i <- 1
@@ -119,7 +119,7 @@ export default function HomePage() {
                                         variant="secondary"
                                         onClick={() =>
                                             navigator.clipboard.writeText(sourceCode)
-                                                .catch(() => {toast.loading("Failed to copy code")})
+                                                .catch(() => {toast.error("Failed to copy code")})
                                                 .then(() => toast.success("Copied code to clipboard"))
                                         }
                                     >
@@ -145,7 +145,7 @@ export default function HomePage() {
                                                         <Link href={"https://www.salisburyschool.org/"}>
                                                         <Image
                                                             loading={"eager"}
-                                                            src={SalisBurySchoolLogo}
+                                                            src={SalisburySchoolLogo}
                                                             alt="Salisbury School Logo"
                                                             width={43.5}
                                                             height={48}
