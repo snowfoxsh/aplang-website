@@ -12,7 +12,7 @@ import RunButton from "@/app/playground/components/run-button";
 import prettyMilliseconds from "pretty-ms";
 import Editor from "@/app/playground/components/editor";
 import {toast} from "sonner";
-import { workerResponse} from "@/app/playground/worker_response";
+import {workerResponse} from "@/app/playground/worker_response";
 import {timeout} from "@/app/playground/utils";
 import {
     NavigationMenu,
@@ -22,9 +22,6 @@ import {
     navigationMenuTriggerStyle
 } from "@/components/ui/navigation-menu";
 import Link from "next/link";
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
 import {saveAs} from "file-saver";
 import {
     AlertDialog, AlertDialogAction, AlertDialogCancel,
@@ -34,9 +31,9 @@ import {
     AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
 import {PresetSelector} from "@/app/playground/components/preset-selector";
-import {number} from "prop-types";
 import InputDialog, {DialogHandle} from "@/app/playground/components/input-prompt";
 import SettingsModal from "@/app/playground/components/settings";
+import {Menu, X} from "lucide-react";
 
 type TabValue = "only-left" | "both" | "only-right";
 
@@ -53,19 +50,16 @@ export default function Playground() {
     const [rightHidden, setRightHidden] = useState(false);
     const [vimMode, setVimMode] = useState<boolean>(false);
     const [fontSize, setFontSize] = useState<number>(14);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-    const [tabValue, setTabValue] = useState<TabValue>("both")
-
+    const [tabValue, setTabValue] = useState<TabValue>("both");
     const [sourceCode, setSourceCode] = useState<string>("");
-
     const [isRunning, setIsRunning] = useState<boolean>(false);
     const [runtime, setRuntime] = useState<number>(0.0);
-
 
     const workerRef = useRef<Worker | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const inputDialogRef = useRef<DialogHandle>(null);
-
 
     useEffect(() => {
         const storedFontSize = localStorage.getItem("fontSize");
@@ -82,7 +76,11 @@ export default function Playground() {
     }
 
     const handleRun = useCallback(async () => {
-        document.getElementById("consoleText")!.innerText = ""; // clear the console
+        // clear the console
+        Array.from(document.getElementsByClassName("consoleText")).forEach(con => {
+            (con as HTMLElement).innerText = "";
+        });
+
         workerRef.current?.postMessage({type: "run", code: sourceCode})
 
         try {
@@ -206,9 +204,10 @@ export default function Playground() {
 
                 switch (event.data.type) {
                     case "log":
-                        // Update console output
-                        const c = document.getElementById("consoleText")!;
-                        c.innerText = c.innerText + event.data.message;
+                        // update console output
+                        Array.from(document.getElementsByClassName("consoleText")).forEach(con => {
+                            (con as HTMLElement).innerText = (con as HTMLElement).innerText + event.data.message;
+                        });
                         break;
                     case "input":
                         const maxStringLength: number = event.data.maxStringLength!;
@@ -253,9 +252,7 @@ export default function Playground() {
 
                         const delta = event.data.time;
 
-                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                        // @ts-expect-error
-                        if (!isNaN(delta) && delta instanceof number) {
+                        if (!isNaN(delta) && (typeof delta === "number")) {
                             setRuntime(delta);
                         }
 
@@ -277,8 +274,9 @@ export default function Playground() {
 
     return (
         <div className="flex flex-col min-h-screen w-full" id="playground">
-            <div className="w-full box-border flex flex-row justify-between items-center px-8 h-16">
-                <div className="flex gap-4">
+            {/* Header with responsive navigation */}
+            <div className="w-full box-border flex flex-row justify-between items-center px-4 md:px-8 h-16">
+                <div className="flex gap-2 md:gap-4">
                     <Link
                         href="/"
                         className="flex justify-start items-center hover:opacity-85 transition-opacity duration-300 mr-1"
@@ -286,13 +284,14 @@ export default function Playground() {
                         <span className="font-bold text-lg mt-[-0.075rem]">Aplang</span>
                         <span className="sr-only">Aplang</span>
                     </Link>
-                    <NavigationMenu>
+
+                    {/* Desktop Navigation */}
+                    <NavigationMenu className="hidden md:flex">
                         <NavigationMenuList>
                             <NavigationMenuItem>
                                 <Link href="/book" passHref legacyBehavior>
                                     <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                                         <span className="font-regular text-base">Docs</span>
-                                        <span className="sr-only">Docs</span>
                                     </NavigationMenuLink>
                                 </Link>
                             </NavigationMenuItem>
@@ -300,7 +299,6 @@ export default function Playground() {
                                 <Link href="/playground" passHref legacyBehavior>
                                     <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                                         <span className="font-regular text-base">Playground</span>
-                                        <span className="sr-only">Playground</span>
                                     </NavigationMenuLink>
                                 </Link>
                             </NavigationMenuItem>
@@ -308,7 +306,6 @@ export default function Playground() {
                                 <Link href="/install" passHref legacyBehavior>
                                     <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                                         <span className="font-regular text-base">Install</span>
-                                        <span className="sr-only">Install</span>
                                     </NavigationMenuLink>
                                 </Link>
                             </NavigationMenuItem>
@@ -316,14 +313,19 @@ export default function Playground() {
                                 <Link href="https://github.com/snowfoxsh/aplang" passHref legacyBehavior>
                                     <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                                         <span className="font-regular text-base">GitHub</span>
-                                        <span className="sr-only">GitHub</span>
                                     </NavigationMenuLink>
                                 </Link>
                             </NavigationMenuItem>
                         </NavigationMenuList>
                     </NavigationMenu>
+
+                    {/* Mobile menu button */}
+                    <Button variant="ghost" className="p-1 md:hidden" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+                        {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                    </Button>
                 </div>
-                <div className="flex gap-4">
+
+                <div className="flex gap-2 md:gap-4">
                     <input
                         type="file"
                         accept=".ap"
@@ -331,29 +333,45 @@ export default function Playground() {
                         style={{display: 'none'}}
                         onChange={handleFileChange}
                     />
-                    <PresetSelector setSourceCode={setSourceCode} />
-                    <Button variant="secondary" onClick={handleImport}>Import</Button>
-                    <Button variant="outline" onClick={handleExport}>Export</Button>
-                    <SettingsModal fontSize={fontSize} setFontSize={setFontSize} vimMode={vimMode} setVimMode={setVimMode} />
+                    <div className="hidden md:flex gap-2 md:gap-4">
+                        <PresetSelector setSourceCode={setSourceCode} />
+                        <Button variant="secondary" onClick={handleImport}>Import</Button>
+                        <Button variant="outline" onClick={handleExport}>Export</Button>
+                        <SettingsModal fontSize={fontSize} setFontSize={setFontSize} vimMode={vimMode} setVimMode={setVimMode} />
+                    </div>
                     <ColorModeToggle/>
                 </div>
             </div>
 
+            {/* Mobile navigation menu */}
+            {mobileMenuOpen && (
+                <div className="flex flex-col p-4 bg-background border-b md:hidden">
+                    <Link href="/book" className="py-2 px-1">Docs</Link>
+                    <Link href="/playground" className="py-2 px-1">Playground</Link>
+                    <Link href="/install" className="py-2 px-1">Install</Link>
+                    <Link href="https://github.com/snowfoxsh/aplang" className="py-2 px-1">GitHub</Link>
+                    <div className="flex flex-wrap gap-2 mt-4">
+                        <PresetSelector setSourceCode={setSourceCode} />
+                        <Button variant="secondary" onClick={handleImport}>Import</Button>
+                        <Button variant="outline" onClick={handleExport}>Export</Button>
+                        <SettingsModal fontSize={fontSize} setFontSize={setFontSize} vimMode={vimMode} setVimMode={setVimMode} />
+                    </div>
+                </div>
+            )}
+
             <Separator/>
 
-            <Tabs className="flex flex-grow flex-row-reverse" defaultValue="both" value={tabValue}
+            <Tabs className="flex flex-grow flex-col md:flex-row-reverse" defaultValue="both" value={tabValue}
                   onValueChange={onTabChange}>
-                {/* Right side */}
-                <div className="flex flex-col w-64 justify-between flex-shrink-0 py-8 pr-8 space-y-2">
+                {/* Desktop Controls Panel */}
+                <div className="hidden md:flex md:flex-col w-64 justify-between flex-shrink-0 py-8 pr-8 space-y-2">
                     <div className="flex flex-col space-y-4">
-                    {/*mode*/}
                         <div className="flex flex-col space-y-2">
                             <HoverCard openDelay={500}>
                                 <HoverCardTrigger asChild>
-                            <span
-                                className={"text-md font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"}>
-                                Mode
-                            </span>
+                                    <span className="text-md font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                        Mode
+                                    </span>
                                 </HoverCardTrigger>
                                 <HoverCardContent className="max-w-lg text-sm">
                                     Choose the interface that best suits your task
@@ -362,12 +380,10 @@ export default function Playground() {
                             <LayoutTabs/>
                         </div>
                         <Separator/>
-                        {/*clear*/}
                         <div className="flex flex-col space-y-2">
-                        <span
-                            className="text-md font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                            Clear
-                        </span>
+                            <span className="text-md font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                Clear
+                            </span>
                             <div className="flex flex-row justify-between space-x-2">
                                 <Button variant="secondary" className="flex-grow" onClick={() => {
                                     document.getElementById("consoleText")!.innerText = ""
@@ -378,12 +394,8 @@ export default function Playground() {
                                     </AlertDialogTrigger>
                                     <AlertDialogContent>
                                         <AlertDialogHeader>
-                                            <AlertDialogTitle>
-                                                Clear the Editor?
-                                            </AlertDialogTitle>
-                                            <AlertDialogDescription>
-                                                This action cannot be undone!
-                                            </AlertDialogDescription>
+                                            <AlertDialogTitle>Clear the Editor?</AlertDialogTitle>
+                                            <AlertDialogDescription>This action cannot be undone!</AlertDialogDescription>
                                         </AlertDialogHeader>
                                         <AlertDialogFooter>
                                             <AlertDialogCancel>Cancel</AlertDialogCancel>
@@ -396,25 +408,59 @@ export default function Playground() {
                     </div>
                     <RunButton isLoading={isRunning} onClick={handleRun}/>
                 </div>
-                {/* Left side */}
-                {/* The 886px in the component below is the max height based on the rest of the page. It's what allows auto-scrolling. */}
-                <div className="flex flex-grow min-w-0 p-8 items-center justify-center max-h-[calc(100vh-65px)]">
-                    <ResizablePanelGroup direction="horizontal" className="border flex-grow h-full rounded-md">
-                        <ResizablePanel defaultSize={66} hidden={leftHidden}>
-                            <Editor fontSize={fontSize} sourceCode={sourceCode} setSourceCode={setSourceCode} useMemory vimMode={vimMode}/>
-                        </ResizablePanel>
-                        <ResizableHandle withHandle={!handleHidden} disabled={handleHidden}/>
-                        <ResizablePanel className="bg-muted relative" defaultSize={34} minSize={15} maxSize={70}
-                                        hidden={rightHidden}>
-                            <div className="h-full p-2 overflow-scroll">
 
-                                {/* console */}
-                                <pre id="consoleText" className="font-firacode whitespace-pre-wrap" />
+                {/* Main content area - adapts to mobile and desktop */}
+                <div className="flex flex-grow min-w-0 p-4 md:p-8 items-center justify-center max-h-[calc(100vh-65px)] md:max-h-[calc(100vh-65px)]">
+                    {/* Desktop view: horizontal panels */}
+                    <div className="hidden md:flex w-full h-full">
+                        <ResizablePanelGroup direction="horizontal" className="border flex-grow h-full rounded-md">
+                            <ResizablePanel defaultSize={66} hidden={leftHidden}>
+                                <Editor fontSize={fontSize} sourceCode={sourceCode} setSourceCode={setSourceCode} useMemory vimMode={vimMode}/>
+                            </ResizablePanel>
+                            <ResizableHandle withHandle={!handleHidden} disabled={handleHidden}/>
+                            <ResizablePanel className="bg-muted relative" defaultSize={34} minSize={15} maxSize={70}
+                                            hidden={rightHidden}>
+                                <div className="h-full p-2 overflow-scroll">
+                                    <pre className="consoleText font-firacode whitespace-pre-wrap" />
+                                </div>
+                                <Badge variant="default" className="absolute bottom-3 right-3">
+                                    {prettyMilliseconds(Math.round(runtime))}
+                                </Badge>
+                            </ResizablePanel>
+                        </ResizablePanelGroup>
+                    </div>
+                    {/* Mobile view: vertical layout */}
+                    <div className="flex flex-col w-full h-[calc(100vh-165px)] md:hidden">
+                        {/* Mobile Editor */}
+                        {!leftHidden && (
+                            <div className="border rounded-md mb-2 flex-grow flex-shrink basis-1/2 overflow-hidden">
+                                <Editor
+                                    fontSize={fontSize}
+                                    sourceCode={sourceCode}
+                                    setSourceCode={setSourceCode}
+                                    useMemory
+                                    vimMode={vimMode}
+                                />
                             </div>
+                        )}
 
-                            <Badge variant="default" className="absolute bottom-3 right-3">{prettyMilliseconds(Math.round(runtime))}</Badge>
-                        </ResizablePanel>
-                    </ResizablePanelGroup>
+                        {/* Mobile Console */}
+                        {!rightHidden && (
+                            <div className="border rounded-md bg-muted relative flex-grow flex-shrink basis-1/2 overflow-hidden">
+                                <div className="h-full p-2 overflow-scroll">
+                                    <pre className="consoleText font-firacode whitespace-pre-wrap" />
+                                </div>
+                                <Badge variant="default" className="absolute bottom-2 right-2">
+                                    {prettyMilliseconds(Math.round(runtime))}
+                                </Badge>
+                            </div>
+                        )}
+
+                        {/* Mobile Run Button */}
+                        <div className="mt-2">
+                            <RunButton isLoading={isRunning} onClick={handleRun} />
+                        </div>
+                    </div>
                 </div>
             </Tabs>
             <InputDialog ref={inputDialogRef} />
