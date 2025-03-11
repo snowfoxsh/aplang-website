@@ -409,9 +409,9 @@ export default function Playground() {
                             <div className="h-full p-2 overflow-scroll">
 
                                 {/* console */}
-                                <div id="consoleText" className="font-firacode"></div>
-
+                                <pre id="consoleText" className="font-firacode whitespace-pre-wrap" />
                             </div>
+
                             <Badge variant="default" className="absolute bottom-3 right-3">{prettyMilliseconds(Math.round(runtime))}</Badge>
                         </ResizablePanel>
                     </ResizablePanelGroup>
