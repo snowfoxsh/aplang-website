@@ -1,3 +1,4 @@
+// app/playground/components/editor.tsx
 import {Dispatch, SetStateAction, useCallback, useEffect, useReducer, useState} from "react";
 import ReactCodeMirror from "@uiw/react-codemirror";
 import {useTheme} from "next-themes";
@@ -17,6 +18,7 @@ interface EditorProps {
     readonly?: boolean;
     useMemory?: boolean;
     vimMode?: boolean;
+    fontSize?: number;
 }
 
 function defineAPLang() {
@@ -137,7 +139,6 @@ function defineAPLang() {
     });
 }
 
-
 // Light mode theme (GitHub-inspired)
 const lightTheme = HighlightStyle.define([
     { tag: tags.keyword, color: '#D73A49' },
@@ -163,7 +164,7 @@ const darkTheme = HighlightStyle.define([
 ]);
 
 export default function Editor(props: EditorProps) {
-    const {sourceCode, setSourceCode, vimMode = false} = props;
+    const {sourceCode, setSourceCode, vimMode = false, fontSize = 14} = props;
 
     const [, forceUpdate] = useReducer(x => x + 1, 0);
 
@@ -217,7 +218,6 @@ export default function Editor(props: EditorProps) {
 
     const extensions = [defineAPLang(), syntaxHighlighting(syntaxTheme)];
 
-
     if (vimMode) {
         extensions.push(vim())
     }
@@ -232,5 +232,7 @@ export default function Editor(props: EditorProps) {
         height={"100%"}
         theme={generateTheme()}
         id={"editor"}
+        style={{fontSize: `${fontSize}px`}}
     />
 }
+

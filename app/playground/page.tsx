@@ -52,6 +52,7 @@ export default function Playground() {
     const [handleHidden, setHandleHidden] = useState(false);
     const [rightHidden, setRightHidden] = useState(false);
     const [vimMode, setVimMode] = useState<boolean>(false);
+    const [fontSize, setFontSize] = useState<number>(14);
 
     const [tabValue, setTabValue] = useState<TabValue>("both")
 
@@ -64,6 +65,17 @@ export default function Playground() {
     const workerRef = useRef<Worker | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const inputDialogRef = useRef<DialogHandle>(null);
+
+
+    useEffect(() => {
+        const storedFontSize = localStorage.getItem("fontSize");
+        if (storedFontSize) {
+            const size = parseInt(storedFontSize, 10);
+            if (!isNaN(size)) {
+                setFontSize(size);
+            }
+        }
+    }, []);
 
     const onTabChange = (tab: string) => {
         setTabValue(tab as TabValue);
@@ -322,7 +334,7 @@ export default function Playground() {
                     <PresetSelector setSourceCode={setSourceCode} />
                     <Button variant="secondary" onClick={handleImport}>Import</Button>
                     <Button variant="outline" onClick={handleExport}>Export</Button>
-                    <SettingsModal vimMode={vimMode} setVimMode={setVimMode} />
+                    <SettingsModal fontSize={fontSize} setFontSize={setFontSize} vimMode={vimMode} setVimMode={setVimMode} />
                     <ColorModeToggle/>
                 </div>
             </div>
@@ -389,7 +401,7 @@ export default function Playground() {
                 <div className="flex flex-grow min-w-0 p-8 items-center justify-center max-h-[calc(100vh-65px)]">
                     <ResizablePanelGroup direction="horizontal" className="border flex-grow h-full rounded-md">
                         <ResizablePanel defaultSize={66} hidden={leftHidden}>
-                            <Editor sourceCode={sourceCode} setSourceCode={setSourceCode} useMemory vimMode={vimMode}/>
+                            <Editor fontSize={fontSize} sourceCode={sourceCode} setSourceCode={setSourceCode} useMemory vimMode={vimMode}/>
                         </ResizablePanel>
                         <ResizableHandle withHandle={!handleHidden} disabled={handleHidden}/>
                         <ResizablePanel className="bg-muted relative" defaultSize={34} minSize={15} maxSize={70}
