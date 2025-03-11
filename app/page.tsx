@@ -23,6 +23,7 @@ import {
 import AdvancedInstallerLogo from '@/assets/logos/AdvancedInstallerLogo';
 import Image from 'next/image';
 import SalisburySchoolLogo from '@/assets/logos/SalisburySchoolLogo.png';
+import BluePurpleGradient from "@/assets/gradents/BluePurple.svg";
 import {toast} from "sonner";
 
 const FizzBuzz = `i <- 1
@@ -49,12 +50,13 @@ export default function HomePage() {
             <div className={'overflow-x-hidden'}>
                 <Image
                     loading={"eager"}
-                    src="/gradients/blue-purple-1.svg"
-                    alt="background gradient"
+                    src={BluePurpleGradient}
+                    alt="background gradient, blue to purple"
                     fill
                     style={{ objectPosition: 'calc(50% + 25rem) calc(15%)' }}
                     className="pointer-events-none absolute inset-0 z-[-1] rotate-180 object-cover shadow-black/5"
                 />
+
             </div>
             <Header />
             <main className="">
