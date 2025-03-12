@@ -7,6 +7,15 @@ async function initApLang() {
   wasmModule = await init();
 
   let input = (prompt) => {
+
+    if (typeof SharedArrayBuffer === 'undefined') {
+      postMessage({
+        type: 'error',
+        message: 'SharedArrayBuffer is not available. This site requires cross-origin isolation.'
+      });
+      return "";
+    }
+
     const maxStringLength = 1024;
     const bufferSize = 4 + maxStringLength;
 
