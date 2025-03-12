@@ -28,11 +28,11 @@ const firaCode = Fira_Code({
 
 
 export const metadata: Metadata = {
-  title: "ApLang",
-  description: "The ApLang Website",
-  icons: {
-    icon: "/favicon.svg",  // Specify the favicon path here
-  },
+    title: "ApLang",
+    description: "ApLang is a platform for learning and teaching AP Computer Science Principles.",
+    icons: {
+        icon: "/favicon.svg",
+    },
 };
 
 export default function RootLayout({
