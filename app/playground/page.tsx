@@ -386,7 +386,9 @@ export default function Playground() {
                             </span>
                             <div className="flex flex-row justify-between space-x-2">
                                 <Button variant="secondary" className="flex-grow" onClick={() => {
-                                    document.getElementById("consoleText")!.innerText = ""
+                                    Array.from(document.getElementsByClassName("consoleText")).forEach(con => {
+                                        (con as HTMLElement).innerText = "";
+                                    });
                                 }}>Console</Button>
                                 <AlertDialog>
                                     <AlertDialogTrigger asChild>
