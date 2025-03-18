@@ -60,6 +60,23 @@ REPEAT UNTIL (i > 30) {
 `,
     },
     {
+        label: "Quiz",
+        value:
+`IMPORT ["INPUT_PROMPT", "FORMAT"] FROM MOD "IO"
+IMPORT "TRIM" FROM MOD "STRING"
+
+name <- INPUT_PROMPT("What is your name?")
+IF (TRIM(name) == "") {
+  DISPLAY("Hello")
+} ELSE {
+  DISPLAY(FORMAT("Hello, {}!", [name]))
+}
+
+age <- INPUT_PROMPT("How old are you?")
+DISPLAY(FORMAT("You are {} years old.", [age]))
+`
+    },
+    {
         label: "Yap",
         value: `REPEAT 10 TIMES {
   DISPLAY("yap")
@@ -88,26 +105,25 @@ IF (count > 0) {
     {
         label: "Insertion Sort",
         value:
-`
-// DONT SUBMIT THIS FUNCTION AS HOMEWORK, your teacher will know :)
+`// DONT SUBMIT THIS FUNCTION AS HOMEWORK, your teacher will know :)
 PROCEDURE insertionSort(list) {
-    // start from the second element (index 2) since the first element is trivially sorted
-    i <- 2
-    REPEAT UNTIL (i > LENGTH(list)) {
-        key <- list[i]
-        j <- i - 1
+  // start from the second element (index 2) since the first element is trivially sorted
+  i <- 2
+  REPEAT UNTIL (i > LENGTH(list)) {
+    key <- list[i]
+    j <- i - 1
         
-        // move elements of list[1..i-1], that are greater than key, to one position ahead
-        REPEAT UNTIL (j < 1 OR list[j] <= key) {
-            list[j + 1] <- list[j]
-            j <- j - 1
-        }
-        
-        // insert the key at the correct position
-        list[j + 1] <- key
-        i <- i + 1
+    // move elements of list[1..i-1], that are greater than key, to one position ahead
+    REPEAT UNTIL (j < 1 OR list[j] <= key) {
+      list[j + 1] <- list[j]
+      j <- j - 1
     }
-    RETURN list
+        
+    // insert the key at the correct position
+    list[j + 1] <- key
+    i <- i + 1
+  }
+  RETURN list
 }
 
 numbers <- [12, 11, 13, 5, 6]
@@ -116,8 +132,48 @@ DISPLAY("original list: " + numbers)
 sortedNumbers <- insertionSort(numbers)
 DISPLAY("sorted list: " + sortedNumbers)
 `
+    },
+    {
+        label: "FizzBuzz",
+        value:
+`i <- 1
+REPEAT 100 TIMES {
+  s <- ""
+  IF (i MOD 3 == 0) {
+    s <- s + "Fizz"
+  }
+  IF (i MOD 5 == 0) {
+    s <- s + "Buzz"
+  }
+  IF (LENGTH(s) == 0) {
+    s <- i
+  }
+  DISPLAY(s)
+  i <- i + 1
+}
+`
+    },
+    {
+        label: "Reverse String",
+        value:
+`
+IMPORT ["FORMAT"] FROM MOD "IO"
+
+PROCEDURE reverse_string(s) {
+  reversed <- ""
+  i <- LENGTH(s)
+  REPEAT UNTIL (i < 1) {
+    reversed <- reversed + s[i]
+    i <- i - 1
+  }
+  RETURN reversed
+}
+
+text <- "hello"
+DISPLAY(FORMAT("Original: {}", [text]))
+DISPLAY(FORMAT("Reversed: {}", [reverse_string(text)]))
+`
     }
-    // todo: add more presets
 ];
 
 // Define the props for PresetSelector
