@@ -4,7 +4,7 @@ import "./globals.css";
 import {ThemeProvider} from "next-themes";
 import React from "react";
 import {Toaster} from "@/components/ui/sonner";
-import Script from "next/script";
+// import Script from "next/script";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -43,13 +43,14 @@ export default function RootLayout({
   return (
       <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} ${firaCode.variable} antialiased`}>
+      {/*<Script*/}
+      {/*    strategy="afterInteractive"*/}
+      {/*    src="https://cloud.umami.is/script.js"*/}
+      {/*    data-website-id="fb7a7cc7-adf5-4283-89cd-b875fe6dddf1"*/}
+      {/*    defer*/}
+      {/*/>*/}
       {/* Umami Analytics Script */}
-      <Script
-          strategy="afterInteractive"
-          src="https://cloud.umami.is/script.js"
-          data-website-id="fb7a7cc7-adf5-4283-89cd-b875fe6dddf1"
-          defer
-      />
+      <script defer src="https://cloud.umami.is/script.js" data-website-id="fb7a7cc7-adf5-4283-89cd-b875fe6dddf1"></script>
       <Toaster position={"bottom-left"} duration={3500} richColors={true}/>
       <ThemeProvider attribute={"class"} defaultTheme={"system"} enableSystem={true} disableTransitionOnChange={true}>
           {children}
