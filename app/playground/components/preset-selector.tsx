@@ -40,48 +40,7 @@ const presets: Preset[] = [
         value: `DISPLAY("Hello World!")
 `,
     },
-    {
-        label: "Fibonacci Sequence",
-        value: `PROCEDURE fib(n) {
-  IF (n == 1) {
-    RETURN 1
-  } ELSE IF (n == 2) {
-    RETURN 1
-  } ELSE {
-    RETURN fib(n-1) + fib(n-2)
-  }
-}
 
-i <- 1
-REPEAT UNTIL (i > 30) {
-  DISPLAY(fib(i))
-  i <- i + 1
-}
-`,
-    },
-    {
-        label: "Quiz",
-        value:
-`IMPORT ["INPUT_PROMPT", "FORMAT"] FROM MOD "IO"
-IMPORT "TRIM" FROM MOD "STRING"
-
-name <- INPUT_PROMPT("What is your name?")
-IF (TRIM(name) == "") {
-  DISPLAY("Hello")
-} ELSE {
-  DISPLAY(FORMAT("Hello, {}!", [name]))
-}
-
-age <- INPUT_PROMPT("How old are you?")
-DISPLAY(FORMAT("You are {} years old.", [age]))
-`
-    },
-    {
-        label: "Yap",
-        value: `REPEAT 10 TIMES {
-  DISPLAY("yap")
-}
-`},
     {
         label: "Average",
         value:
@@ -99,6 +58,50 @@ IF (count > 0) {
   DISPLAY("average: " + average)
 } ELSE {
   DISPLAY("no numbers to calculate average")
+}
+`
+    },
+    {
+        label: "Yap",
+        value: `REPEAT 10 TIMES {
+  DISPLAY("yap")
+}
+`},
+    {
+        label: "Quiz",
+        value:
+            `IMPORT ["INPUT_PROMPT", "FORMAT"] FROM MOD "IO"
+IMPORT "TRIM" FROM MOD "STRING"
+
+name <- INPUT_PROMPT("What is your name?")
+IF (TRIM(name) == "") {
+  DISPLAY("Hello")
+} ELSE {
+  DISPLAY(FORMAT("Hello, {}!", [name]))
+}
+
+age <- INPUT_PROMPT("How old are you?")
+DISPLAY(FORMAT("You are {} years old.", [age]))
+`
+    },
+
+    {
+        label: "FizzBuzz",
+        value:
+            `i <- 1
+REPEAT 100 TIMES {
+  s <- ""
+  IF (i MOD 3 == 0) {
+    s <- s + "Fizz"
+  }
+  IF (i MOD 5 == 0) {
+    s <- s + "Buzz"
+  }
+  IF (LENGTH(s) == 0) {
+    s <- i
+  }
+  DISPLAY(s)
+  i <- i + 1
 }
 `
     },
@@ -134,25 +137,25 @@ DISPLAY("sorted list: " + sortedNumbers)
 `
     },
     {
-        label: "FizzBuzz",
-        value:
-`i <- 1
-REPEAT 100 TIMES {
-  s <- ""
-  IF (i MOD 3 == 0) {
-    s <- s + "Fizz"
+        label: "Fibonacci Sequence",
+        value: `PROCEDURE fib(n) {
+  IF (n == 1) {
+    RETURN 1
+  } ELSE IF (n == 2) {
+    RETURN 1
+  } ELSE {
+    RETURN fib(n-1) + fib(n-2)
   }
-  IF (i MOD 5 == 0) {
-    s <- s + "Buzz"
-  }
-  IF (LENGTH(s) == 0) {
-    s <- i
-  }
-  DISPLAY(s)
+}
+
+i <- 1
+REPEAT UNTIL (i > 30) {
+  DISPLAY(fib(i))
   i <- i + 1
 }
-`
+`,
     },
+
     {
         label: "Reverse String",
         value:
