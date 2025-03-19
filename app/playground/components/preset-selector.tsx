@@ -156,8 +156,7 @@ REPEAT 100 TIMES {
     {
         label: "Reverse String",
         value:
-`
-IMPORT ["FORMAT"] FROM MOD "IO"
+`IMPORT ["FORMAT"] FROM MOD "IO"
 
 PROCEDURE reverse_string(s) {
   reversed <- ""
@@ -173,6 +172,72 @@ text <- "hello"
 DISPLAY(FORMAT("Original: {}", [text]))
 DISPLAY(FORMAT("Reversed: {}", [reverse_string(text)]))
 `
+    },
+    {
+        label: "Robot",
+        value:
+`IMPORT MOD "ROBOT"
+IMPORT "TRIM" FROM MOD "STRING"
+
+r <- ROBOT_MAP(TRIM(\\
+"
+###x#
+#..n.
+1....
+.....
+.###.
+1###2
+"))
+
+PROCEDURE runForward(r) {
+    REPEAT UNTIL (NOT CAN_MOVE(r, "forward")) {
+        MOVE_FORWARD(r)
+    }
+}
+
+DISPLAY(FORMAT_ROBOT(r))
+
+ROTATE_LEFT(r)
+MOVE_FORWARD(r)
+MOVE_FORWARD(r)
+ROTATE_LEFT(r)
+MOVE_FORWARD(r)
+ROTATE_RIGHT(r)
+MOVE_FORWARD(r)
+ROTATE_LEFT(r)
+
+DISPLAY(FORMAT_ROBOT(r))
+
+runForward(r)
+
+DISPLAY(FORMAT_ROBOT(r))
+
+ROTATE_LEFT(r)
+ROTATE_LEFT(r)
+MOVE_FORWARD(r)
+MOVE_FORWARD(r)
+ROTATE_RIGHT(r)
+runForward(r)
+ROTATE_RIGHT(r)
+MOVE_FORWARD(r)
+MOVE_FORWARD(r)
+
+DISPLAY(FORMAT_ROBOT(r))
+
+ROTATE_LEFT(r)
+ROTATE_LEFT(r)
+runForward(r)
+ROTATE_LEFT(r)
+MOVE_FORWARD(r)
+ROTATE_RIGHT(r)
+done <- MOVE_FORWARD(r)
+
+DISPLAY(FORMAT_ROBOT(r))
+if (done) {
+    DISPLAY("Done")
+}
+`
+
     }
 ];
 
