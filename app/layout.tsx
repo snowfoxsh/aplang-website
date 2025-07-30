@@ -43,14 +43,17 @@ export default function RootLayout({
   return (
       <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} ${firaCode.variable} antialiased`}>
-      {/*<Script*/}
-      {/*    strategy="afterInteractive"*/}
-      {/*    src="https://cloud.umami.is/script.js"*/}
-      {/*    data-website-id="fb7a7cc7-adf5-4283-89cd-b875fe6dddf1"*/}
-      {/*    defer*/}
-      {/*/>*/}
-      {/* Umami Analytics Script */}
-      <script defer src="https://cloud.umami.is/script.js" data-website-id="fb7a7cc7-adf5-4283-89cd-b875fe6dddf1"></script>
+        
+{/*       <!-- Google tag (gtag.js) --> */}
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-B8F0SRVZC7"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-B8F0SRVZC7');
+      </script>
+
       <Toaster position={"bottom-left"} duration={3500} richColors={true}/>
       <ThemeProvider attribute={"class"} defaultTheme={"system"} enableSystem={true} disableTransitionOnChange={true}>
           {children}
