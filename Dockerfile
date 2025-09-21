@@ -17,8 +17,25 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# install wasm-pack
-RUN apk add --no-cache wasm-pack
+# install rust and cargo (need for wasm builds)
+RUN apk add --no-cache rust cargo
+
+# ensure rust toolchain + build deps are present (use rustup to install stable)
+RUN apk add --no-cache bash curl build-base pkgconfig openssl-dev rustup
+
+# rustup installs to /root/.cargo/bin; make sure it's on PATH
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# install stable toolchain via rustup and the wasm target
+RUN rustup-init -y --default-toolchain stable && \
+	rustup target add wasm32-unknown-unknown
+
+# wasm-pack + exact wasm-bindgen cli v0.2.103
+RUN cargo install wasm-pack && \
+	cargo install --locked wasm-bindgen-cli --version 0.2.103
+
+# naur bindgen CLI/crate mismatch
+RUN cd wasm-target && wasm-pack build --mode no-install --target web --out-dir ../public/wasm
 
 # Install mdbook (markdown book)
 RUN apk add --no-cache mdbook
