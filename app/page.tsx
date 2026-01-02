@@ -69,7 +69,7 @@ export default function HomePage() {
                             </h1>
                             <p className="text-lg">
                                 A programming language made to aid students
-                                taking AP Computer Science Principles.
+                                taking AP Computer Science Principles. It executes AP CSP Psudocode. Read the book to learn more.
                             </p>
                             <div className="flex items-center space-x-4 pt-4">
                                 <Button variant="default" asChild>
